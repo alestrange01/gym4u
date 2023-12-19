@@ -18,6 +18,10 @@ public class PersonalTrainer {
         return this.codice;
     }
 
+    public void setCorso(Corso c) {
+        this.corsi.put(c.getCodiceUnivoco(), c);
+    }
+
     public String toString() {
         return "Personal Trainer: " + this.codice;
     }
