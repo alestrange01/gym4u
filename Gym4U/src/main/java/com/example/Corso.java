@@ -51,6 +51,18 @@ public class Corso {
         return this;
     }
 
+    public Map<Integer, Lezione> getLezioni() {
+        return this.lezioni;
+    }
+
+    public Lezione selezionaLezione(Integer codice) {
+        return this.lezioni.get(codice);
+    }
+
+    public List<Integer> getIdsPersonalTrainer() {
+        return this.idsPersonalTrainer;
+    }
+
     public Integer getDisponibilità() {
         return this.postiDisponibili;
     }

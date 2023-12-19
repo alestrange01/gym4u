@@ -16,4 +16,11 @@ public class Prenotazione {
         return this.codice;
     }
 
+    public Lezione getLezione(){
+        return this.lezione;
+    }
+
+    public void setLezione(Lezione l){
+        this.lezione = l;
+    }
 }

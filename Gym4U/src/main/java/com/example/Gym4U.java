@@ -182,4 +182,118 @@ public class Gym4U {
         corsoSelezionato.diminuisciDisponibilità();
         corsoSelezionato = null;
     }
+
+
+    public void prenotazioneLezioneCorso(Integer codiceCliente) {
+        Cliente cliente = clienti.get(codiceCliente);
+        visualizzaCorsiCliente(cliente);
+        Scanner scanner = new Scanner(System.in);
+
+        Map<Integer, Lezione> lezioni = null;
+        do {
+
+            System.out.print("Inserisci il codice del corso: ");
+            String inputCorso = scanner.next();
+            try {
+                Integer codiceCorso = Integer.parseInt(inputCorso);
+                lezioni = selezionaCorsoRestituisciLezioni(codiceCorso);
+            } catch (NumberFormatException e) {
+                System.out.println("Input non valido. Inserisci un numero.");
+            }
+        } while (this.corsoSelezionato == null);
+
+        System.out.println("Lezioni disponibili: ");
+        if(cliente.getPrenotazioni().isEmpty()){
+            for (Map.Entry<Integer, Lezione> entry : lezioni.entrySet()) {
+                System.out.println(entry.getValue().toString());
+                System.out.println("-----------------------------");
+            }
+        }else{
+            List<Integer> codiciLezioniPrenotate = new ArrayList<>();
+            for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
+                codiciLezioniPrenotate.add(entry.getValue().getLezione().getCodice());
+            }
+
+            for (Map.Entry<Integer, Lezione> entryLezione : lezioni.entrySet()) {
+                if(!codiciLezioniPrenotate.contains(entryLezione.getKey())){
+                        System.out.println(entryLezione.getValue().toString());
+                        System.out.println("-----------------------------");
+                    }
+            }
+        }
+
+
+
+
+        Lezione lezioneSelezionata = null;
+        do {
+            System.out.print("Inserisci il codice della lezione: ");
+            String inputLezione = scanner.next();
+            try {
+                Integer codiceLezione = Integer.parseInt(inputLezione);
+                lezioneSelezionata = selezionaLezione(codiceLezione);
+                creaPrenotazione();
+            } catch (NumberFormatException e) {
+                System.out.println("Input non valido. Inserisci un numero.");
+            }
+        } while (lezioneSelezionata == null);
+
+        System.out.println("Lezione selezionata: ");
+        System.out.println(lezioneSelezionata.toString());
+
+        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+        Integer conferma = scanner.nextInt();
+        try {
+            switch (conferma) {
+                case 0:
+                    scanner.close();
+                    return;
+                case 1:
+                    confermaLezione(this.prenotazioneCorrente, cliente, lezioneSelezionata);
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 1.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+
+        System.out.println("Prenotazione alla lezione effettuata con successo.");
+    }
+
+
+    public void visualizzaCorsiCliente(Cliente cliente) {
+        if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
+            throw new RuntimeException("Certificato medico o/e abbonamento del cliente non valido.");
+        }
+        System.out.println("Corsi disponibili: ");
+        for (Map.Entry<Integer, Corso> entry : cliente.getCorsi().entrySet()) {
+            System.out.println(entry.getValue().toString());
+        }
+        this.corsiDisponibili = new ArrayList<>(cliente.getCorsi().values());
+    }
+
+    public Map<Integer, Lezione> selezionaCorsoRestituisciLezioni(Integer codiceUnivoco) {
+        Corso corso = this.corsi.get(codiceUnivoco);
+        this.corsoSelezionato = corso;
+        return corso.getLezioni();
+    }
+
+    public Lezione selezionaLezione(Integer codiceLezione) {
+        return this.corsoSelezionato.getLezioni().get(codiceLezione);
+    }
+
+    public void creaPrenotazione() {
+        this.prenotazioneCorrente = new Prenotazione();
+    }
+
+    public void confermaLezione(Prenotazione prenotazione, Cliente cliente, Lezione lezione) {
+        prenotazione.setLezione(lezione);
+        prenotazioni.put(prenotazione.getCodice(), prenotazione);
+        cliente.setPrenotazione(prenotazione);
+    }
+
+
+
 }

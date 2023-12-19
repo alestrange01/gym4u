@@ -28,6 +28,10 @@ public class Cliente {
         return this.corsi;
     }
 
+    public Map<Integer, Prenotazione> getPrenotazioni() {
+        return prenotazioni;
+    }
+
     public void createCertificatoMedico() {
         setCertificatoMedico(new CertificatoMedico());
     }
@@ -42,6 +46,10 @@ public class Cliente {
 
     public void setCertificatoMedico(CertificatoMedico certificatoMedico) {
         this.certificatoMedico = certificatoMedico;
+    }
+
+    public void setPrenotazione(Prenotazione p) {
+        this.prenotazioni.put(p.getCodice(), p);
     }
 
     public void setCorso(Corso c) {

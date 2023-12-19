@@ -14,8 +14,8 @@ public class App {
                 do {
                     isCliente = false;
                     System.out.print("Inserisci il tuo codice: ");
-                    codice = Integer.parseInt(scanner.next());
                     try {
+                        codice = Integer.parseInt(scanner.next());
                         isCliente = gym4u.verificaCliente(codice);
                         //isAmmnistratore = gym4u.verificaAmministratore(codiceCliente);
                     } catch (NumberFormatException e) {
@@ -27,6 +27,7 @@ public class App {
                     System.out.println("*                               *");
                     System.out.println("*         Menu Cliente          *");
                     System.out.println("* 1. Iscrizione corso           *");
+                    System.out.println("* 2. Prenotazione lezione corso *");
                     System.out.println("* 0. Esci                       *");
                     System.out.println("*                               *");
                     System.out.println("*********************************");
@@ -42,6 +43,10 @@ public class App {
                         case 1:
                             if(isCliente)
                                 gym4u.iscrizioneCorso(codice);
+                            break;
+                        case 2:
+                            if(isCliente)
+                                gym4u.prenotazioneLezioneCorso(codice);
                             break;
                         case 0:
                             continua = false;
