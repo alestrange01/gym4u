@@ -14,15 +14,19 @@ public class PersonalTrainer {
         this.corsi = new HashMap<Integer, Corso>();
     }
 
-    public Integer getCodice() {
+    public Integer getCodice(){
         return this.codice;
+    }
+
+    public Map<Integer, Corso> getCorsi(){
+        return this.corsi;
     }
 
     public void setCorso(Corso c) {
         this.corsi.put(c.getCodiceUnivoco(), c);
     }
 
-    public String toString() {
+    public String toString(){
         return "Personal Trainer: " + this.codice;
     }
 }
