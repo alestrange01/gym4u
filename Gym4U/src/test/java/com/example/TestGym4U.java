@@ -1,6 +1,7 @@
 package com.example;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -165,5 +166,31 @@ public class TestGym4U {
         assertEquals(lezione, prenotazione.getLezione());
         assertEquals(prenotazione, gym4u.getPrenotazioni().get(prenotazione.getCodice()));
         assertEquals(prenotazione, cliente.getPrenotazioni().get(prenotazione.getCodice()));
+    }
+
+     @Test
+    public void testNuovoCorso() {
+        gym4u.nuovoCorso("zumba", "Aerobica",
+                Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
+                Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),
+                1.5f, 10, new ArrayList<Integer>(gym4u.getPersonalTrainers().keySet()));
+        assertNotNull(gym4u.getCorsoCorrente());
+    }
+
+    @Test
+    public void testConfermaNuovoCorso() {
+        gym4u.nuovoCorso("zumba", "Aerobica",
+                Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
+                Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),
+                1.5f, 10, new ArrayList<Integer>(gym4u.getPersonalTrainers().keySet()));
+        gym4u.confermaNuovoCorso();
+        assertNull(gym4u.getCorsoCorrente());
+    }
+
+    @Test
+    public void testAssociaPersonalTrainer() {
+        personalTrainer.setCorso(corso);
+
+        assertEquals(corso, personalTrainer.getCorsi().get(corso.getCodiceUnivoco()));
     }
 }
