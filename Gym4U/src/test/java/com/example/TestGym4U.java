@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,8 +52,8 @@ public class TestGym4U {
     @Test
     public void testVisualizzaCorsi() {
         Cliente cliente = new Cliente();
-        cliente.createAbbonamento();
-        cliente.createCertificatoMedico();
+        cliente.setAbbonamento(new Abbonamento());
+        cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         Map<Integer, Cliente> clienti = gym4u.getClienti();
         clienti.put(cliente.getCodice(), cliente);
         gym4u.setClienti(clienti);
@@ -110,8 +111,8 @@ public class TestGym4U {
     @Test
     public void testVisualizzaCorsiCliente() {
         Cliente cliente = new Cliente();
-        cliente.createAbbonamento();
-        cliente.createCertificatoMedico();
+        cliente.setAbbonamento(new Abbonamento());
+        cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         Map<Integer, Cliente> clienti = gym4u.getClienti();
         clienti.put(cliente.getCodice(), cliente);
         gym4u.setClienti(clienti);

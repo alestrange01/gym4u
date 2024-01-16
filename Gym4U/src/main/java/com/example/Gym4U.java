@@ -83,8 +83,8 @@ public class Gym4U {
         // Avviamento
         Cliente cliente = new Cliente();
         System.out.println("Cliente: " + cliente.getCodice());
-        cliente.createCertificatoMedico();
-        cliente.createAbbonamento();
+        cliente.setAbbonamento(new Abbonamento());
+        cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         clienti.put(cliente.getCodice(), cliente);
 
         PersonalTrainer personalTrainer = new PersonalTrainer();

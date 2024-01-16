@@ -11,7 +11,7 @@ public class TestPrenotazione {
     @Test
     public void testSetLezione() {
         Prenotazione prenotazione = new Prenotazione();
-        Lezione lezione = new Lezione(LocalDate.of(2023, 12, 21), LocalTime.of(10, 30));
+        Lezione lezione = new Lezione(LocalDate.of(2023, 12, 21), LocalTime.of(10, 30), LezioneEnum.LezioneCorso);
 
         prenotazione.setLezione(lezione);
 

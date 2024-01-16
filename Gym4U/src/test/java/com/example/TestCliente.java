@@ -3,6 +3,7 @@ package com.example;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
@@ -37,7 +38,7 @@ public class TestCliente {
     public void testVerificaCertificatoMedico() {
         Cliente cliente = new Cliente();
 
-        cliente.createCertificatoMedico();
+        cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
 
         assertTrue(cliente.verificaCertificatoMedico());
     }
@@ -46,7 +47,7 @@ public class TestCliente {
     public void testVerificaAbbonamento() {
         Cliente cliente = new Cliente();
 
-        cliente.createAbbonamento();
+        cliente.setAbbonamento(new Abbonamento());
 
         assertTrue(cliente.verificaAbbonamento());
     }

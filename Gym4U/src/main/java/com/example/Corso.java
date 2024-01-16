@@ -35,23 +35,22 @@ public class Corso {
     }
 
     public void loadLezioni() {
-        if(this.lezioni == null){
+        if (this.lezioni == null) {
             this.lezioni = new LinkedHashMap<>();
         }
         LocalDate oggi = LocalDate.now();
-        
 
         for (String giorno : this.giorniDisponibili) {
             DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
 
             int giorniDiDifferenza = (giornoDaAggiungere.getValue() - oggi.getDayOfWeek().getValue() + 7) % 7;
             LocalDate dataLezione = oggi.plusDays(giorniDiDifferenza);
-            if(this.lezioni.entrySet().stream().anyMatch(entry -> entry.getValue().getGiorno().equals(dataLezione))){
+            if (this.lezioni.entrySet().stream().anyMatch(entry -> entry.getValue().getGiorno().equals(dataLezione))) {
                 continue;
             }
 
             for (LocalTime ora : this.orariDisponibili) {
-                Lezione lezione = new Lezione(dataLezione, ora);
+                Lezione lezione = new Lezione(dataLezione, ora, LezioneEnum.LezioneCorso);
                 lezioni.put(lezione.getCodice(), lezione);
             }
         }
