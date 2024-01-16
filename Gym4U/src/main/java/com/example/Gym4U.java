@@ -1,7 +1,7 @@
 package com.example;
 
-import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,9 +81,10 @@ public class Gym4U {
 
     public void loadData() {
         // Avviamento
+        AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         Cliente cliente = new Cliente();
         System.out.println("Cliente: " + cliente.getCodice());
-        cliente.setAbbonamento(new Abbonamento());
+        cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         clienti.put(cliente.getCodice(), cliente);
 
@@ -98,7 +99,7 @@ public class Gym4U {
         confermaNuovoCorso();
 
         nuovoCorso("pilates", "Funzionale",
-                Arrays.asList( "Tuesday", "Thursday", "Friday"),
+                Arrays.asList("Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(12, 30), LocalTime.of(19, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
@@ -216,38 +217,32 @@ public class Gym4U {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
         } while (this.corsoSelezionato == null);
-        
 
-        //rimuovo lezioni prima di oggi e ordino cronologicamente
+        // rimuovo lezioni prima di oggi e ordino cronologicamente
         lezioni.entrySet().removeIf(entry -> entry.getValue().getGiorno().isBefore(LocalDate.now()));
         lezioni = lezioni.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue((l1, l2) -> l1.getGiorno().compareTo(l2.getGiorno())))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-        
-
         System.out.println("Lezioni disponibili: ");
-        if(cliente.getPrenotazioni().isEmpty()){
+        if (cliente.getPrenotazioni().isEmpty()) {
             for (Map.Entry<Integer, Lezione> entry : lezioni.entrySet()) {
                 System.out.println(entry.getValue().toString());
                 System.out.println("-----------------------------");
             }
-        }else{
+        } else {
             List<Integer> codiciLezioniPrenotate = new ArrayList<>();
             for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
                 codiciLezioniPrenotate.add(entry.getValue().getLezione().getCodice());
             }
 
             for (Map.Entry<Integer, Lezione> entryLezione : lezioni.entrySet()) {
-                if(!codiciLezioniPrenotate.contains(entryLezione.getKey())){
-                        System.out.println(entryLezione.getValue().toString());
-                        System.out.println("-----------------------------");
-                    }
+                if (!codiciLezioniPrenotate.contains(entryLezione.getKey())) {
+                    System.out.println(entryLezione.getValue().toString());
+                    System.out.println("-----------------------------");
+                }
             }
         }
-
-
-
 
         Lezione lezioneSelezionata = null;
         boolean prenotazionePossibile = false;
@@ -257,7 +252,7 @@ public class Gym4U {
             try {
                 Integer codiceLezione = Integer.parseInt(inputLezione);
                 lezioneSelezionata = selezionaLezione(codiceLezione);
-                if(prenotazionePossibile = prenotazionePossibile(lezioneSelezionata, cliente)){
+                if (prenotazionePossibile = prenotazionePossibile(lezioneSelezionata, cliente)) {
                     creaPrenotazione();
                 }
             } catch (NumberFormatException e) {
@@ -312,7 +307,7 @@ public class Gym4U {
     }
 
     public boolean prenotazionePossibile(Lezione lezione, Cliente cliente) {
-        //controllo che il cliente non abbia una lezione prenotata lo stesso giorno
+        // controllo che il cliente non abbia una lezione prenotata lo stesso giorno
         for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
             if (entry.getValue().getLezione().getGiorno().equals(lezione.getGiorno())) {
                 System.out.println("Hai già prenotato una lezione per questo giorno.");

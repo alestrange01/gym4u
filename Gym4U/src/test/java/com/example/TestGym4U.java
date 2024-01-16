@@ -52,7 +52,8 @@ public class TestGym4U {
     @Test
     public void testVisualizzaCorsi() {
         Cliente cliente = new Cliente();
-        cliente.setAbbonamento(new Abbonamento());
+        AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
+        cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         Map<Integer, Cliente> clienti = gym4u.getClienti();
         clienti.put(cliente.getCodice(), cliente);
@@ -64,7 +65,8 @@ public class TestGym4U {
 
         assertTrue(cliente.verificaCertificatoMedico() && cliente.verificaAbbonamento());
 
-        Map<Integer, Corso> corsi = new LinkedHashMap<>(); //Dici cosi? Mi è andato circa 10 volte di fila senza mai errore
+        Map<Integer, Corso> corsi = new LinkedHashMap<>(); // Dici cosi? Mi è andato circa 10 volte di fila senza mai
+                                                           // errore
         corsi.put(corso.getCodiceUnivoco(), corso);
         corsi.put(corso2.getCodiceUnivoco(), corso2);
         gym4u.setCorsi(corsi);
@@ -111,7 +113,8 @@ public class TestGym4U {
     @Test
     public void testVisualizzaCorsiCliente() {
         Cliente cliente = new Cliente();
-        cliente.setAbbonamento(new Abbonamento());
+        AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
+        cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         Map<Integer, Cliente> clienti = gym4u.getClienti();
         clienti.put(cliente.getCodice(), cliente);
@@ -129,7 +132,7 @@ public class TestGym4U {
         Cliente cliente = new Cliente();
         cliente.setCorso(corso);
 
-        Map<Integer, Corso> corsi = new HashMap<>(); //Dava null perchè non trovava nessun corso settato su gym4U
+        Map<Integer, Corso> corsi = new HashMap<>(); // Dava null perchè non trovava nessun corso settato su gym4U
         corsi.put(corso.getCodiceUnivoco(), corso);
         gym4u.setCorsi(corsi);
 

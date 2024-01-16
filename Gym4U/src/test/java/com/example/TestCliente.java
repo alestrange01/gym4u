@@ -47,7 +47,8 @@ public class TestCliente {
     public void testVerificaAbbonamento() {
         Cliente cliente = new Cliente();
 
-        cliente.setAbbonamento(new Abbonamento());
+        AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
+        cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
 
         assertTrue(cliente.verificaAbbonamento());
     }
