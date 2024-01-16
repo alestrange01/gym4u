@@ -1,6 +1,7 @@
 package com.example;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -33,7 +34,7 @@ public class TestGym4U {
     public void creaCorso() {
         personalTrainer = new PersonalTrainer();
         corso = new Corso("zumba", "Aerobica",
-                Arrays.asList("lun", "mar", "gio", "ven"),
+                Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),
                 1.5f, 10, Arrays.asList(personalTrainer.getCodice()));
     }
@@ -56,13 +57,13 @@ public class TestGym4U {
         clienti.put(cliente.getCodice(), cliente);
         gym4u.setClienti(clienti);
         Corso corso2 = new Corso("pilates", "Funzionale",
-                Arrays.asList("lun", "mar", "gio", "ven"),
+                Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(12, 30), LocalTime.of(19, 30)),
                 1.5f, 10, Arrays.asList(personalTrainer.getCodice()));
 
         assertTrue(cliente.verificaCertificatoMedico() && cliente.verificaAbbonamento());
 
-        Map<Integer, Corso> corsi = new LinkedHashMap<>();
+        Map<Integer, Corso> corsi = new LinkedHashMap<>(); //Dici cosi? Mi è andato circa 10 volte di fila senza mai errore
         corsi.put(corso.getCodiceUnivoco(), corso);
         corsi.put(corso2.getCodiceUnivoco(), corso2);
         gym4u.setCorsi(corsi);
@@ -127,7 +128,7 @@ public class TestGym4U {
         Cliente cliente = new Cliente();
         cliente.setCorso(corso);
 
-        Map<Integer, Corso> corsi = new HashMap<>();
+        Map<Integer, Corso> corsi = new HashMap<>(); //Dava null perchè non trovava nessun corso settato su gym4U
         corsi.put(corso.getCodiceUnivoco(), corso);
         gym4u.setCorsi(corsi);
 
@@ -152,6 +153,27 @@ public class TestGym4U {
     }
 
     @Test
+    public void testPrenotazionePossibile() {
+        Cliente cliente = new Cliente();
+        cliente.setCorso(corso);
+
+        List<Lezione> lezioniStessoGiorno = new ArrayList<>();
+        for (Lezione lezione1 : corso.getLezioni().values()) {
+            for (Lezione lezione2 : corso.getLezioni().values()) {
+                if (!lezione1.equals(lezione2) && lezione1.getGiorno().equals(lezione2.getGiorno())) {
+                    lezioniStessoGiorno.add(lezione1);
+                    lezioniStessoGiorno.add(lezione2);
+                    break; // Esci dopo aver trovato la prima coppia
+                }
+            }
+        }
+        Prenotazione prenotazione = new Prenotazione();
+        prenotazione.setLezione(lezioniStessoGiorno.get(0));
+        cliente.setPrenotazione(prenotazione);
+        assertFalse(gym4u.prenotazionePossibile(lezioniStessoGiorno.get(1), cliente));
+    }
+
+    @Test
     public void testConfermaLezione() {
         Prenotazione prenotazione = new Prenotazione();
 
@@ -168,7 +190,7 @@ public class TestGym4U {
         assertEquals(prenotazione, cliente.getPrenotazioni().get(prenotazione.getCodice()));
     }
 
-     @Test
+    @Test
     public void testNuovoCorso() {
         gym4u.nuovoCorso("zumba", "Aerobica",
                 Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),

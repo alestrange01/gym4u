@@ -1,5 +1,7 @@
 package com.example;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,19 +30,31 @@ public class Corso {
         this.orariDisponibili = orariDisponibili;
         this.durataLezione = durataLezione;
         this.postiDisponibili = postiDisponibili;
-        this.lezioni = loadLezioni(this.giorniDisponibili, this.orariDisponibili);
+        loadLezioni();
         this.idsPersonalTrainer = idsPersonalTrainer;
     }
 
-    private Map<Integer, Lezione> loadLezioni(List<String> giorniDisponibili, List<LocalTime> orariDisponibili) {
-        Map<Integer, Lezione> lezioni = new LinkedHashMap<Integer, Lezione>();
-        for (String giorno : giorniDisponibili) {
-            for (LocalTime localTime : orariDisponibili) {
-                Lezione lezione = new Lezione(giorno, localTime);
+    public void loadLezioni() {
+        if(this.lezioni == null){
+            this.lezioni = new LinkedHashMap<>();
+        }
+        LocalDate oggi = LocalDate.now();
+        
+
+        for (String giorno : this.giorniDisponibili) {
+            DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
+
+            int giorniDiDifferenza = (giornoDaAggiungere.getValue() - oggi.getDayOfWeek().getValue() + 7) % 7;
+            LocalDate dataLezione = oggi.plusDays(giorniDiDifferenza);
+            if(this.lezioni.entrySet().stream().anyMatch(entry -> entry.getValue().getGiorno().equals(dataLezione))){
+                continue;
+            }
+
+            for (LocalTime ora : this.orariDisponibili) {
+                Lezione lezione = new Lezione(dataLezione, ora);
                 lezioni.put(lezione.getCodice(), lezione);
             }
         }
-        return lezioni;
     }
 
     public Integer getCodiceUnivoco() {
@@ -52,6 +66,7 @@ public class Corso {
     }
 
     public Map<Integer, Lezione> getLezioni() {
+
         return this.lezioni;
     }
 

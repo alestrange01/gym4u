@@ -1,10 +1,12 @@
 package com.example;
 
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -90,19 +92,19 @@ public class Gym4U {
         personalTrainers.put(personalTrainer.getCodice(), personalTrainer);
 
         nuovoCorso("zumba", "Aerobica",
-                Arrays.asList("lun", "mar", "gio", "ven"),
+                Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
 
         nuovoCorso("pilates", "Funzionale",
-                Arrays.asList("lun", "mar", "gio", "ven"),
+                Arrays.asList( "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(12, 30), LocalTime.of(19, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
 
         nuovoCorso("crossfit", "Funzionale",
-                Arrays.asList("lun", "mar", "gio"),
+                Arrays.asList("Monday", "Tuesday", "Thursday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(18, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
@@ -214,39 +216,54 @@ public class Gym4U {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
         } while (this.corsoSelezionato == null);
+        
+
+        //rimuovo lezioni prima di oggi e ordino cronologicamente
+        lezioni.entrySet().removeIf(entry -> entry.getValue().getGiorno().isBefore(LocalDate.now()));
+        lezioni = lezioni.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue((l1, l2) -> l1.getGiorno().compareTo(l2.getGiorno())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        
 
         System.out.println("Lezioni disponibili: ");
-        if (cliente.getPrenotazioni().isEmpty()) {
+        if(cliente.getPrenotazioni().isEmpty()){
             for (Map.Entry<Integer, Lezione> entry : lezioni.entrySet()) {
                 System.out.println(entry.getValue().toString());
                 System.out.println("-----------------------------");
             }
-        } else {
+        }else{
             List<Integer> codiciLezioniPrenotate = new ArrayList<>();
             for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
                 codiciLezioniPrenotate.add(entry.getValue().getLezione().getCodice());
             }
 
             for (Map.Entry<Integer, Lezione> entryLezione : lezioni.entrySet()) {
-                if (!codiciLezioniPrenotate.contains(entryLezione.getKey())) {
-                    System.out.println(entryLezione.getValue().toString());
-                    System.out.println("-----------------------------");
-                }
+                if(!codiciLezioniPrenotate.contains(entryLezione.getKey())){
+                        System.out.println(entryLezione.getValue().toString());
+                        System.out.println("-----------------------------");
+                    }
             }
         }
 
+
+
+
         Lezione lezioneSelezionata = null;
+        boolean prenotazionePossibile = false;
         do {
             System.out.print("Inserisci il codice della lezione: ");
             String inputLezione = scanner.next();
             try {
                 Integer codiceLezione = Integer.parseInt(inputLezione);
                 lezioneSelezionata = selezionaLezione(codiceLezione);
-                creaPrenotazione();
+                if(prenotazionePossibile = prenotazionePossibile(lezioneSelezionata, cliente)){
+                    creaPrenotazione();
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
-        } while (lezioneSelezionata == null);
+        } while (lezioneSelezionata == null || !prenotazionePossibile);
 
         System.out.println("Lezione selezionata: ");
         System.out.println(lezioneSelezionata.toString());
@@ -286,11 +303,23 @@ public class Gym4U {
     public Map<Integer, Lezione> selezionaCorsoRestituisciLezioni(Integer codiceUnivoco) {
         Corso corso = this.corsi.get(codiceUnivoco);
         this.corsoSelezionato = corso;
+        corso.loadLezioni();
         return corso.getLezioni();
     }
 
     public Lezione selezionaLezione(Integer codiceLezione) {
         return this.corsoSelezionato.getLezioni().get(codiceLezione);
+    }
+
+    public boolean prenotazionePossibile(Lezione lezione, Cliente cliente) {
+        //controllo che il cliente non abbia una lezione prenotata lo stesso giorno
+        for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
+            if (entry.getValue().getLezione().getGiorno().equals(lezione.getGiorno())) {
+                System.out.println("Hai già prenotato una lezione per questo giorno.");
+                return false;
+            }
+        }
+        return true;
     }
 
     public void creaPrenotazione() {
@@ -345,7 +374,7 @@ public class Gym4U {
         System.out.print("Inserisci la descrizione del corso: ");
         String descrizione = scanner.nextLine();
 
-        System.out.print("Inserisci i giorni disponibili del corso separati da una virgola: ");
+        System.out.print("Inserisci i giorni (Monday->Sunday) disponibili del corso separati da una virgola: ");
         List<String> giorniDisponibili = Arrays.asList(scanner.nextLine().split(","));
 
         System.out.print("Inserisci gli orari (HH:mm) disponibili del corso separati da una virgola: ");
@@ -393,5 +422,4 @@ public class Gym4U {
             personalTrainer.setCorso(corsoCorrente);
         }
     }
-
 }
