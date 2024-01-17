@@ -9,11 +9,14 @@ public class Lezione {
     private Integer codice;
     private LocalDate giorno;
     private LocalTime orario;
+    private LezioneEnum tipologiaLezione;
 
-    public Lezione(LocalDate giorno, LocalTime orario) {
+
+    public Lezione(LocalDate giorno, LocalTime orario, LezioneEnum tipologiaLezione) {
         this.codice = new Random().nextInt();
         this.giorno = giorno;
         this.orario = orario;
+        this.tipologiaLezione = tipologiaLezione;
     }
 
     public Integer getCodice() {
@@ -27,6 +30,8 @@ public class Lezione {
     public String toString() {
         return "Codice: " + this.codice + "\n" +
                 "Giorno: " + this.giorno + " (" + this.giorno.getDayOfWeek() + ")\n" +
-                "Orario: " + this.orario + "\n";
+                "Orario: " + this.orario + "\n" + 
+                "Tipologia: " + this.tipologiaLezione + "\n";
+
     }
 }

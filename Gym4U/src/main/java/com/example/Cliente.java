@@ -11,6 +11,8 @@ public class Cliente {
     private CertificatoMedico certificatoMedico;
     private Map<Integer, Corso> corsi;
     private Map<Integer, Prenotazione> prenotazioni;
+    private Badge badge;
+    private MetodoDiPagamento metodoDiPagamento;
 
     public Cliente() {
         this.codice = new Random().nextInt();
@@ -18,6 +20,8 @@ public class Cliente {
         this.prenotazioni = new HashMap<Integer, Prenotazione>();
         this.certificatoMedico = null;
         this.abbonamento = null;
+        this.badge = new Badge();
+        this.metodoDiPagamento = null;
     }
 
     public Integer getCodice() {
@@ -32,16 +36,12 @@ public class Cliente {
         return prenotazioni;
     }
 
-    public void createCertificatoMedico() {
-        setCertificatoMedico(new CertificatoMedico());
-    }
-
-    public void createAbbonamento() {
-        setAbbonamento(new Abbonamento());
-    }
-
     public void setAbbonamento(Abbonamento abbonamento) {
         this.abbonamento = abbonamento;
+    }
+
+    public void setMetodoDiPagamento(MetodoDiPagamento metodoDiPagamento) {
+        this.metodoDiPagamento = metodoDiPagamento;
     }
 
     public void setCertificatoMedico(CertificatoMedico certificatoMedico) {
@@ -62,6 +62,10 @@ public class Cliente {
 
     public boolean verificaAbbonamento() {
         return this.abbonamento.verificaAbbonamento();
+    }
+
+    public Badge getBadge() {
+        return this.badge;
     }
 
 }

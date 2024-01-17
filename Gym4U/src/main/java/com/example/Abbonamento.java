@@ -1,13 +1,20 @@
 package com.example;
 
+import java.time.LocalDate;
 import java.util.Random;
 
-public class Abbonamento {
+public abstract class Abbonamento {
 
     private Integer codice;
+    private Float prezzoMensile;
+    private Float scontoMensile;
+    private LocalDate dataScadenza;
 
-    public Abbonamento() {
+    public Abbonamento(Float scontoMensile, LocalDate dataScadenza) {
         this.codice = new Random().nextInt();
+        this.prezzoMensile = 30f;
+        this.scontoMensile = scontoMensile;
+        this.dataScadenza = dataScadenza;
     }
 
     public Integer getCodice(){
@@ -15,6 +22,9 @@ public class Abbonamento {
     }
 
     public boolean verificaAbbonamento() {
+        if (this.dataScadenza.isBefore(LocalDate.now())){
+            return false;
+        }
         return true;
     }
 }
