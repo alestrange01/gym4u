@@ -97,6 +97,7 @@ public class Gym4U {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
                 "mariorossi@gmail.com", "3394309876");
         System.out.println("Cliente: " + cliente.getCodice());
+        System.out.println("Badge: " + cliente.getBadge().getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         cliente.associaMetodoDiPagamento(1234567890, LocalDate.of(2022, 1, 1));
@@ -145,6 +146,20 @@ public class Gym4U {
         return false;
     }
 
+    public boolean verificaAmministratore(Integer codice) {
+        if (codice == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isIngressoInPalestra(Integer codice) {
+        if (codice == 1) {
+            return true;
+        }
+        return false;
+    }
+
     public void iscrizioneCorso(Integer codiceCliente) {
 
         List<Corso> corsi = visualizzaCorsi(codiceCliente);
@@ -187,10 +202,8 @@ public class Gym4U {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
         } while (!number);
-
-        System.out.println("Iscrizione al corso effettuata con successo.");
-
         pulisciCorrentiESelezionati();
+        System.out.println("Iscrizione al corso effettuata con successo.");
     }
 
     public List<Corso> visualizzaCorsi(Integer codiceCliente) {
@@ -706,8 +719,57 @@ public class Gym4U {
 
     private void confermaPrenotazione() {
         Prenotazione p = new Prenotazione();
-        confermaLezione(p, this.clienteCorrente, this.lezioneCorrente);
-        this.personalTrainerSelezionato.setLezione(this.lezioneCorrente);
+        confermaLezione(p, clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
+        personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
+    }
+
+    public void accessoInPalestraTramiteBadge(Integer codiceBadge) {
+        Prenotazione prenotazione = accessoInPalestra(codiceBadge);
+
+        confermaPresenza();
+
+        System.out.println("Accesso in palestra acconsentito.");
+        pulisciCorrentiESelezionati();
+    }
+
+    private Prenotazione accessoInPalestra(Integer codiceBadge) {
+        if (!isBadgeValido(codiceBadge)) {
+            throw new RuntimeException("Il badge inserito non appartiene a nessun cliente.");
+        }
+
+        if (!isPrenotazioneValida()) {
+            throw new RuntimeException("Non esiste alcuna prenotazione valida associata a questo cliente.");
+        }
+
+        return prenotazioneCorrente;
+    }
+
+    private Boolean isBadgeValido(Integer codiceBadge) {
+        for (Cliente cliente : this.clienti.values()) {
+            if (cliente.getBadge().getCodice().equals(codiceBadge)) {
+                this.clienteCorrente = cliente;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean isPrenotazioneValida() {
+        for (Prenotazione p : this.clienteCorrente.getPrenotazioni().values()) {
+            if (p.getLezione().getGiorno().isEqual(LocalDate.now())) {
+                if (LocalTime.now().isAfter(p.getLezione().getOrario().minusMinutes(30))
+                        && (LocalTime.now().isBefore(p.getLezione().getOrario())
+                                || LocalTime.now().equals(p.getLezione().getOrario()))) {
+                    prenotazioneCorrente = p;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void confermaPresenza() {
+        prenotazioneCorrente.setValidata();
     }
 
     //UC5
