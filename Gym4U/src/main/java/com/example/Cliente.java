@@ -1,5 +1,6 @@
 package com.example;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -7,6 +8,13 @@ import java.util.Random;
 public class Cliente {
 
     private Integer codice;
+    private String nome;
+    private String cognome;
+    private LocalDate dataNascita;
+    private String indirizzo;
+    private String email;
+    private String telefono;
+
     private Abbonamento abbonamento;
     private CertificatoMedico certificatoMedico;
     private Map<Integer, Corso> corsi;
@@ -14,8 +22,15 @@ public class Cliente {
     private Badge badge;
     private MetodoDiPagamento metodoDiPagamento;
 
-    public Cliente() {
+    public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
+            String telefono) {
         this.codice = new Random().nextInt();
+        this.nome = nome;
+        this.cognome = cognome;
+        this.dataNascita = dataNascita;
+        this.indirizzo = indirizzo;
+        this.email = email;
+        this.telefono = telefono;
         this.corsi = new HashMap<Integer, Corso>();
         this.prenotazioni = new HashMap<Integer, Prenotazione>();
         this.certificatoMedico = null;
@@ -36,16 +51,60 @@ public class Cliente {
         return prenotazioni;
     }
 
+    public Abbonamento getAbbonamento() {
+        return this.abbonamento;
+    }
+
     public void setAbbonamento(Abbonamento abbonamento) {
         this.abbonamento = abbonamento;
+    }
+
+    public void associaAbbonamento(Integer tipologiaAbbonamento) {
+        switch (tipologiaAbbonamento) {
+            case 1:
+                AbbonamentoMensileFactory abbonamentoMensileFactory = new AbbonamentoMensileFactory();
+                AbbonamentoMensile abbonamentoMensile = abbonamentoMensileFactory.creaAbbonamento();
+                setAbbonamento(abbonamentoMensile);
+                break;
+            case 2:
+                AbbonamentoSemestraleFactory abbonamentoSemestraleFactory = new AbbonamentoSemestraleFactory();
+                AbbonamentoSemestrale abbonamentoSemestrale = abbonamentoSemestraleFactory.creaAbbonamento();
+                setAbbonamento(abbonamentoSemestrale);
+                break;
+            case 3:
+                AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
+                AbbonamentoAnnuale abbonamentoAnnuale = abbonamentoAnnualeFactory.creaAbbonamento();
+                setAbbonamento(abbonamentoAnnuale);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public MetodoDiPagamento getMetodoDiPagamento() {
+        return this.metodoDiPagamento;
     }
 
     public void setMetodoDiPagamento(MetodoDiPagamento metodoDiPagamento) {
         this.metodoDiPagamento = metodoDiPagamento;
     }
 
+    public void associaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta) {
+        MetodoDiPagamento metodoDiPagamento = new MetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+        setMetodoDiPagamento(metodoDiPagamento);
+    }
+
+    public CertificatoMedico getCertificatoMedico() {
+        return this.certificatoMedico;
+    }
+
     public void setCertificatoMedico(CertificatoMedico certificatoMedico) {
         this.certificatoMedico = certificatoMedico;
+    }
+
+    public void associaCertificatoMedico(LocalDate dataScadenza) {
+        CertificatoMedico certificatoMedico = new CertificatoMedico(dataScadenza);
+        setCertificatoMedico(certificatoMedico);
     }
 
     public void setPrenotazione(Prenotazione p) {
@@ -66,6 +125,25 @@ public class Cliente {
 
     public Badge getBadge() {
         return this.badge;
+    }
+
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
+
+    public void creaBadge() {
+        Badge badge = new Badge();
+        setBadge(badge);
+    }
+
+    public String toString() {
+        return "Cliente: " + this.codice + "\n" +
+                "Nome: " + this.nome + "\n" +
+                "Cognome: " + this.cognome + "\n" +
+                "Data di nascita: " + this.dataNascita + "\n" +
+                "Indirizzo: " + this.indirizzo + "\n" +
+                "Email: " + this.email + "\n" +
+                "Telefono: " + this.telefono + "\n";
     }
 
 }

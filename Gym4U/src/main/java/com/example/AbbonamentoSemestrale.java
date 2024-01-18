@@ -8,4 +8,9 @@ public class AbbonamentoSemestrale extends Abbonamento {
         super(5f, LocalDate.now().plusMonths(6));
     }
 
+    @Override
+    public String toString() {
+        return "Abbonamento semestrale\n" + super.toString();
+    }
+
 }

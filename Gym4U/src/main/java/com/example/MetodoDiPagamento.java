@@ -16,7 +16,8 @@ public class MetodoDiPagamento {
     }
 
     public String toString() {
-        return "Data scadenza: " + this.dataScadenza + "\n" +
+        return "Metodo di pagamento: \n" +
+                "Data scadenza: " + this.dataScadenza + "\n" +
                 "Numero carta: " + this.numeroCarta+ "\n";
     }
 }

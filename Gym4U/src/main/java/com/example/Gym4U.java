@@ -3,6 +3,7 @@ package com.example;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import scala.languageFeature.existentials;
 
 //Singleton GoF
 public class Gym4U {
@@ -24,6 +27,7 @@ public class Gym4U {
     private Map<Integer, Corso> corsi;
     private Prenotazione prenotazioneCorrente;
     private Map<Integer, Prenotazione> prenotazioni;
+    private Cliente clienteCorrente;
 
     private Gym4U() {
         this.clienti = new HashMap<Integer, Cliente>();
@@ -33,6 +37,8 @@ public class Gym4U {
         this.corsiDisponibili = null;
         this.corsi = new HashMap<Integer, Corso>();
         this.prenotazioni = new HashMap<Integer, Prenotazione>();
+        this.prenotazioneCorrente = null;
+        this.clienteCorrente = null;
         loadData();
     }
 
@@ -82,7 +88,8 @@ public class Gym4U {
     public void loadData() {
         // Avviamento
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
+                "mariorossi@gmail.com", "3394309876");
         System.out.println("Cliente: " + cliente.getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
@@ -344,7 +351,7 @@ public class Gym4U {
         try {
             switch (conferma) {
                 case 0:
-                    scanner.close();
+                    System.out.println("Creazione nuovo corso annullata.");
                     return;
                 case 1:
                     confermaNuovoCorso();
@@ -417,4 +424,171 @@ public class Gym4U {
             personalTrainer.setCorso(corsoCorrente);
         }
     }
+
+    public void registrazioneNuovoCliente(){
+        if(!infoNuovoCliente())
+            return;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Riepilogo informazioni inserite: ");
+        System.out.print(this.clienteCorrente.toString());
+
+        //certificato medico 
+        LocalDate dataScadenzaCertificatoMedico = null;
+        do{
+            try{
+                System.out.print("Inserisci la data di scadenza del Certificato Medico (yyyy-MM-dd): ");
+                String dataScadenzaCertificatoMedicoInput = scanner.nextLine();
+                dataScadenzaCertificatoMedico = LocalDate.parse(dataScadenzaCertificatoMedicoInput);
+            }
+            catch (DateTimeParseException e){
+                System.out.println("Data non valida. Inserisci una data valida.");
+            }
+        }while (dataScadenzaCertificatoMedico == null);
+        if(LocalDate.now().isAfter(dataScadenzaCertificatoMedico)){
+            System.out.println("Il certificato medico è scaduto.");
+            System.out.println("Registrazione nuovo cliente annullata.");
+            return;
+        }
+        associaCertificatoMedico(dataScadenzaCertificatoMedico);
+
+        //abbonamento
+        Integer tipologiaAbbonamento = null;
+        do{
+        System.out.print("Inserire la tipologia di abbonamento:\n" +
+                    "1. Abbonamento mensile\n" +
+                    "2. Abbonamento semestrale\n" +
+                    "3. Abbonamento annuale\n" +
+                    "Inserisci il numero corrispondente: ");
+        String tipologiaAbbonamentoInput = scanner.nextLine();
+        tipologiaAbbonamento = Integer.parseInt(tipologiaAbbonamentoInput);
+        }
+        while (tipologiaAbbonamento != 1 && tipologiaAbbonamento != 2 && tipologiaAbbonamento != 3);
+        associaAbbonamento(tipologiaAbbonamento);
+
+        //metodo di pagamento
+        LocalDate dataScadenzaCarta = null;
+        Integer numeroCarta = null;
+        do{
+            try{
+                System.out.println("Inserisci il metodo di pagamento:");
+                System.out.print("Numero carta: ");
+                String numeroCartaInput = scanner.nextLine();
+                numeroCarta = Integer.parseInt(numeroCartaInput);
+                System.out.print("Data scadenza carta (yyyy-MM-dd): ");
+                String dataScadenzaCartaInput = scanner.nextLine();
+                dataScadenzaCarta = LocalDate.parse(dataScadenzaCartaInput);
+                if(LocalDate.now().isAfter(dataScadenzaCarta)){
+                    System.out.println("La carta è scaduta.");
+                    dataScadenzaCarta = null;
+                }
+            }
+            catch (DateTimeParseException e){
+                System.out.println("Data non valida. Inserisci una data valida.");
+            }
+        }while (dataScadenzaCarta == null);        
+        associaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+
+        //riepilogo informazioni inserite
+        System.out.println("Riepilogo informazioni inserite: ");
+        System.out.println(clienteCorrente.toString());
+        System.out.println(clienteCorrente.getCertificatoMedico().toString());
+        System.out.println(clienteCorrente.getAbbonamento().toString());
+        System.out.println(clienteCorrente.getMetodoDiPagamento().toString());
+
+        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+        Integer conferma = scanner.nextInt();
+        Badge badge = null;
+        try {
+            switch (conferma) {
+                case 0:
+                    System.out.println("Registrazione nuovo cliente annullata.");
+                    return;
+                case 1:
+                    badge = confermaCliente();
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 1.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+
+        System.out.println("Registrazione nuovo cliente effettuata con successo.");
+        System.out.println("Badge associato al cliente: " + badge.getCodice());
+    }
+
+    public boolean infoNuovoCliente(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Inserisci il nome del cliente: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Inserisci il cognome del cliente: ");
+        String cognome = scanner.nextLine();
+
+        LocalDate dataNascita = null;
+        do{
+            try{
+                System.out.print("Inserisci la data di nascita del cliente (yyyy-MM-dd): ");
+                String dataNascitaInput = scanner.nextLine();
+                dataNascita = LocalDate.parse(dataNascitaInput);
+            }
+            catch (DateTimeParseException e){
+                System.out.println("Data non valida. Inserisci una data valida.");
+            }
+        }while (dataNascita == null);
+        if(LocalDate.now().minusYears(18).isBefore(dataNascita)){
+            System.out.println("Il cliente deve essere maggiorenne.");
+            System.out.println("Registrazione nuovo cliente annullata.");
+            //finisce l'esecuzione del programma
+            return false;
+        }
+
+        System.out.print("Inserisci l'indirizzo del cliente: ");
+        String indirizzo = scanner.nextLine();
+
+        System.out.print("Inserisci email del cliente: ");
+        String email = scanner.nextLine();
+        while (!email.contains("@")) {
+            System.out.print("Inserisci un'email valida: ");
+            email = scanner.nextLine();
+        }
+
+        System.out.print("Inserisci il numero di telefono del cliente: ");
+        String numeroTelefono = scanner.nextLine();
+        while (numeroTelefono.length() != 10) {
+            System.out.print("Inserisci un numero di telefono valido: ");
+            numeroTelefono = scanner.nextLine();
+        }
+
+        nuovoCliente(nome, cognome, dataNascita, indirizzo, email, numeroTelefono);
+        return true;
+    }
+
+    public void nuovoCliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email, String numeroTelefono){
+        Cliente cliente = new Cliente(nome, cognome, dataNascita, indirizzo, email, numeroTelefono);
+        this.clienteCorrente = cliente;
+    }
+
+    public void associaCertificatoMedico(LocalDate dataScadenzaCertificatoMedico){
+        this.clienteCorrente.associaCertificatoMedico(dataScadenzaCertificatoMedico);
+    }
+
+    public void associaAbbonamento(Integer tipologiaAbbonamento){
+        this.clienteCorrente.associaAbbonamento(tipologiaAbbonamento);
+    }
+
+    public void associaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta){
+        this.clienteCorrente.associaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+    }
+
+    public Badge confermaCliente(){
+        this.clienteCorrente.creaBadge();
+        this.clienti.put(this.clienteCorrente.getCodice(), this.clienteCorrente);
+        Badge badge = this.clienteCorrente.getBadge();
+        this.clienteCorrente = null;
+        return badge;
+    }
+
 }

@@ -34,13 +34,14 @@ public class App {
                     System.out.println("*********************************");
                 }
                 else if(isAmmnistratore){
-                    System.out.println("*******************************");
-                    System.out.println("*                             *");
-                    System.out.println("*      Menu Amministratore    *");
-                    System.out.println("* 1. Crea nuovo corso         *");
-                    System.out.println("* 0. Esci                     *");
-                    System.out.println("*                             *");
-                    System.out.println("*******************************");
+                    System.out.println("**********************************");
+                    System.out.println("*                                *");
+                    System.out.println("*      Menu Amministratore       *");
+                    System.out.println("* 1. Crea nuovo corso            *");
+                    System.out.println("* 2. Registrazione nuovo cliente *");
+                    System.out.println("* 0. Esci                        *");
+                    System.out.println("*                                *");
+                    System.out.println("**********************************");
                 }
     
                 System.out.print("Inserisci il numero dell'opzione desiderata: ");
@@ -59,6 +60,8 @@ public class App {
                         case 2:
                             if(isCliente)
                                 gym4u.prenotazioneLezioneCorso(codice);
+                            else if(isAmmnistratore)
+                                gym4u.registrazioneNuovoCliente();
                             break;
                         case 3:
                             

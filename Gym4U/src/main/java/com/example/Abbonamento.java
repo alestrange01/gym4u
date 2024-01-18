@@ -27,4 +27,9 @@ public abstract class Abbonamento {
         }
         return true;
     }
+
+    public String toString() {
+        return "Prezzo mensile: " + (this.prezzoMensile - this.scontoMensile) + "\n" +
+                "Data scadenza: " + this.dataScadenza + "\n";
+    }
 }
