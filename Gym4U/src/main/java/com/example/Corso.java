@@ -50,9 +50,10 @@ public class Corso {
             }
 
             for (LocalTime ora : this.orariDisponibili) {
-                Lezione lezione = new Lezione(dataLezione, ora, LezioneEnum.LezioneCorso);
+                Lezione lezione = new Lezione(dataLezione, ora, durataLezione, LezioneEnum.LezioneCorso);
                 lezioni.put(lezione.getCodice(), lezione);
             }
+
         }
     }
 
