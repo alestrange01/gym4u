@@ -29,6 +29,7 @@ public class App {
                     System.out.println("*         Menu Cliente          *");
                     System.out.println("* 1. Iscrizione corso           *");
                     System.out.println("* 2. Prenotazione lezione corso *");
+                    System.out.println("* 3. Prenotazione lezione PT    *");
                     System.out.println("* 0. Esci                       *");
                     System.out.println("*                               *");
                     System.out.println("*********************************");
@@ -64,7 +65,7 @@ public class App {
                                 gym4u.registrazioneNuovoCliente();
                             break;
                         case 3:
-                            
+                            gym4u.prenotazioneLezionePT(codice);
                             break;
                         case 0:
                             continua = false;

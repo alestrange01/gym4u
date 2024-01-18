@@ -24,6 +24,10 @@ public class PersonalTrainer {
         return this.corsi;
     }
 
+    public Map<Integer, Lezione> getLezioni() {
+        return this.lezioni;
+    }
+
     public void setCorso(Corso c) {
         this.corsi.put(c.getCodiceUnivoco(), c);
     }
