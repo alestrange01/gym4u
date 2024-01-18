@@ -12,7 +12,8 @@ import org.junit.Test;
 public class TestCliente {
     @Test
     public void testSetPrenotazione() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         Prenotazione prenotazione = new Prenotazione();
 
         cliente.setPrenotazione(prenotazione);
@@ -22,7 +23,8 @@ public class TestCliente {
 
     @Test
     public void testSetCorso() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+        "3331234567");
         PersonalTrainer personalTrainer = new PersonalTrainer();
         Corso corso = new Corso("zumba", "Aerobica",
                 Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
@@ -36,7 +38,8 @@ public class TestCliente {
 
     @Test
     public void testVerificaCertificatoMedico() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+        "3331234567");
 
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
 
@@ -45,7 +48,8 @@ public class TestCliente {
 
     @Test
     public void testVerificaAbbonamento() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+        "3331234567");
 
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());

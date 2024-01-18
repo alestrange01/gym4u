@@ -42,7 +42,8 @@ public class TestGym4U {
 
     @Test
     public void testVerificaCliente() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
 
         gym4u.getClienti().put(cliente.getCodice(), cliente);
 
@@ -51,7 +52,8 @@ public class TestGym4U {
 
     @Test
     public void testVisualizzaCorsi() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
@@ -95,7 +97,8 @@ public class TestGym4U {
 
     @Test
     public void testConfermaIscrizione() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         Map<Integer, Cliente> clienti = gym4u.getClienti();
         clienti.put(cliente.getCodice(), cliente);
         gym4u.setClienti(clienti);
@@ -112,7 +115,8 @@ public class TestGym4U {
 
     @Test
     public void testVisualizzaCorsiCliente() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
@@ -129,7 +133,8 @@ public class TestGym4U {
 
     @Test
     public void testSelezionaCorsoRestituisciLezione() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         cliente.setCorso(corso);
 
         Map<Integer, Corso> corsi = new HashMap<>(); // Dava null perchè non trovava nessun corso settato su gym4U
@@ -145,7 +150,8 @@ public class TestGym4U {
 
     @Test
     public void testSelezionaLezione() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         cliente.setCorso(corso);
 
         Set<Integer> mappaChiavi = corso.getLezioni().keySet();
@@ -158,7 +164,8 @@ public class TestGym4U {
 
     @Test
     public void testPrenotazionePossibile() {
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
         cliente.setCorso(corso);
 
         List<Lezione> lezioniStessoGiorno = new ArrayList<>();
@@ -181,7 +188,8 @@ public class TestGym4U {
     public void testConfermaLezione() {
         Prenotazione prenotazione = new Prenotazione();
 
-        Cliente cliente = new Cliente();
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
 
         Set<Integer> mappaChiavi = corso.getLezioni().keySet();
         List<Integer> listaChiavi = new ArrayList<>(mappaChiavi);
