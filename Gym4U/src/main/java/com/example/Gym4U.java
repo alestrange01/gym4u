@@ -645,7 +645,7 @@ public class Gym4U {
         try {
             switch (conferma) {
                 case 0:
-                    scanner.close();
+                    System.out.println("Prenotazione alla lezionePT annullata.");
                     return;
                 case 1:
                     confermaPrenotazione();
