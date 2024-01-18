@@ -29,6 +29,8 @@ public class Gym4U {
     private Lezione lezioneCorrente;
     private Cliente clienteCorrente;
     private PersonalTrainer personalTrainerSelezionato;
+    private Abbonamento abbonamentoCorrente;
+    private MetodoDiPagamento metodoDiPagamentoCorrente;
 
     private Gym4U() {
         this.clienti = new HashMap<Integer, Cliente>();
@@ -40,6 +42,9 @@ public class Gym4U {
         this.prenotazioni = new HashMap<Integer, Prenotazione>();
         this.prenotazioneCorrente = null;
         this.clienteCorrente = null;
+        this.personalTrainerSelezionato = null;
+        this.abbonamentoCorrente = null;
+        this.metodoDiPagamentoCorrente = null;
         loadData();
     }
 
@@ -94,6 +99,7 @@ public class Gym4U {
         System.out.println("Cliente: " + cliente.getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
+        cliente.associaMetodoDiPagamento(1234567890, LocalDate.of(2022, 1, 1));
         clienti.put(cliente.getCodice(), cliente);
 
         PersonalTrainer personalTrainer = new PersonalTrainer();
@@ -127,6 +133,8 @@ public class Gym4U {
         this.lezioneCorrente = null;
         this.clienteCorrente = null;
         this.personalTrainerSelezionato = null;
+        this.abbonamentoCorrente = null;
+        this.metodoDiPagamentoCorrente = null;
     }
 
     public boolean verificaCliente(Integer codiceCliente) {
@@ -700,5 +708,133 @@ public class Gym4U {
         Prenotazione p = new Prenotazione();
         confermaLezione(p, this.clienteCorrente, this.lezioneCorrente);
         this.personalTrainerSelezionato.setLezione(this.lezioneCorrente);
+    }
+
+    //UC5
+    public void gestioneAbbonamento(Integer codiceCliente){
+        Cliente cliente = clienti.get(codiceCliente);
+
+        System.out.println("Abbonamento attuale: ");
+        System.out.println(cliente.getAbbonamento().toString());
+        System.out.println("Metodo di pagamento attuale: ");
+        System.out.println(cliente.getMetodoDiPagamento().toString());
+
+        Scanner scanner = new Scanner(System.in);
+        //TODO Gestire eventuale elimina abbonamento
+        System.out.print("Inserisci il numero dell'opzione desiderata:\n" +
+                "1. Modifica abbonamento\n" +
+                "2. Modifica metodo di pagamento\n" +
+                "0. Esci\n" +
+                "Inserisci il numero corrispondente: ");
+        Integer scelta = Integer.parseInt(scanner.nextLine());
+        try {
+            switch (scelta) {
+                case 0:
+                    System.out.println("Gestione abbonamento annullata.");
+                    return;
+                case 1:
+                    Integer tipologiaAbbonamento = null;
+                    do {
+                        System.out.print("Inserire la tipologia di abbonamento desiderata:\n" +
+                                "1. Abbonamento mensile\n" +
+                                "2. Abbonamento semestrale\n" +
+                                "3. Abbonamento annuale\n" +
+                                "Inserisci il numero corrispondente: ");
+                        String tipologiaAbbonamentoInput = scanner.nextLine();
+                        tipologiaAbbonamento = Integer.parseInt(tipologiaAbbonamentoInput);
+                    } while (tipologiaAbbonamento != 1 && tipologiaAbbonamento != 2 && tipologiaAbbonamento != 3);
+                    this.abbonamentoCorrente = modificaAbbonamento(tipologiaAbbonamento, cliente);
+                    System.out.println("Abbonamento selezionato: ");
+                    System.out.println(this.abbonamentoCorrente.toString());
+
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    Integer conferma = scanner.nextInt();
+                    try {
+                        switch (conferma) {
+                            case 0:
+                                System.out.println("Modifica abbonamento annullata.");
+                                return;
+                            case 1:
+                                confermaModificaAbbonamento(cliente);
+                                System.out.println("Modifiche avvenute con successo.");
+                                break;
+                            default:
+                                System.out.println("Inserisci un numero tra 0 e 1.");
+                                break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input non valido. Inserisci un numero.");
+                    }
+
+                    break;
+                case 2:
+                    LocalDate dataScadenzaCarta = null;
+                    Integer numeroCarta = null;
+                    do {
+                        try {
+                            System.out.println("Inserisci il metodo di pagamento:");
+                            System.out.print("Numero carta: ");
+                            String numeroCartaInput = scanner.nextLine();
+                            numeroCarta = Integer.parseInt(numeroCartaInput);
+                            System.out.print("Data scadenza carta (yyyy-MM-dd): ");
+                            String dataScadenzaCartaInput = scanner.nextLine();
+                            dataScadenzaCarta = LocalDate.parse(dataScadenzaCartaInput);
+                            if (LocalDate.now().isAfter(dataScadenzaCarta)) {
+                                System.out.println("La carta è scaduta.");
+                                dataScadenzaCarta = null;
+                            }
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Data non valida. Inserisci una data valida.");
+                        }
+                    } while (dataScadenzaCarta == null);
+                        this.metodoDiPagamentoCorrente = modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta, cliente);
+                        System.out.println("Metodo di pagamento inserito: ");
+                        System.out.println(this.metodoDiPagamentoCorrente.toString());
+
+                        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                        conferma = scanner.nextInt();
+                        try {
+                            switch (conferma) {
+                                case 0:
+                                    System.out.println("Modifica metodo di pagamento annullata.");
+                                    return;
+                                case 1:
+                                    confermaModificaMetodoDiPagamento(cliente);
+                                    System.out.println("Modifiche avvenute con successo.");
+                                    break;
+                                default:
+                                    System.out.println("Inserisci un numero tra 0 e 1.");
+                                    break;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Input non valido. Inserisci un numero.");
+                        }
+
+
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 3.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+        pulisciCorrentiESelezionati();
+    }
+
+    public Abbonamento modificaAbbonamento(Integer tipologiaAbbonamento, Cliente cliente) {
+        return cliente.modificaAbbonamento(tipologiaAbbonamento);
+    }
+
+    public void confermaModificaAbbonamento(Cliente cliente) {
+        cliente.setAbbonamento(this.abbonamentoCorrente);
+    }
+
+    public MetodoDiPagamento modificaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta, Cliente cliente) {
+        return cliente.modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+    }
+
+    public void confermaModificaMetodoDiPagamento(Cliente cliente) {
+        cliente.setMetodoDiPagamento(this.metodoDiPagamentoCorrente);
     }
 }
