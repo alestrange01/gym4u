@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class AbbonamentoMensile extends Abbonamento {
 
     public AbbonamentoMensile() {
-        super(0f, LocalDate.now().plusDays(30));
+        super(0f, LocalDate.now().plusMonths(1));
     }
 
     @Override

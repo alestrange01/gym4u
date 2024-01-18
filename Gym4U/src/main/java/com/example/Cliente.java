@@ -81,6 +81,25 @@ public class Cliente {
         }
     }
 
+    public Abbonamento modificaAbbonamento(Integer tipologiaAbbonamento) {
+        switch (tipologiaAbbonamento) {
+            case 1:
+                AbbonamentoMensileFactory abbonamentoMensileFactory = new AbbonamentoMensileFactory();
+                AbbonamentoMensile abbonamentoMensile = abbonamentoMensileFactory.creaAbbonamento();
+                return abbonamentoMensile;
+            case 2:
+                AbbonamentoSemestraleFactory abbonamentoSemestraleFactory = new AbbonamentoSemestraleFactory();
+                AbbonamentoSemestrale abbonamentoSemestrale = abbonamentoSemestraleFactory.creaAbbonamento();
+                return abbonamentoSemestrale;
+            case 3:
+                AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
+                AbbonamentoAnnuale abbonamentoAnnuale = abbonamentoAnnualeFactory.creaAbbonamento();
+                return abbonamentoAnnuale;
+            default:
+                return null;
+        }
+    }
+
     public MetodoDiPagamento getMetodoDiPagamento() {
         return this.metodoDiPagamento;
     }
@@ -92,6 +111,11 @@ public class Cliente {
     public void associaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta) {
         MetodoDiPagamento metodoDiPagamento = new MetodoDiPagamento(numeroCarta, dataScadenzaCarta);
         setMetodoDiPagamento(metodoDiPagamento);
+    }
+
+    public MetodoDiPagamento modificaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta) {
+        MetodoDiPagamento metodoDiPagamento = new MetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+        return metodoDiPagamento;
     }
 
     public CertificatoMedico getCertificatoMedico() {
