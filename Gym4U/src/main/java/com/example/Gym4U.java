@@ -97,6 +97,7 @@ public class Gym4U {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
                 "mariorossi@gmail.com", "3394309876");
         System.out.println("Cliente: " + cliente.getCodice());
+        System.out.println("Badge: " + cliente.getBadge().getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         cliente.associaMetodoDiPagamento(1234567890, LocalDate.of(2022, 1, 1));
@@ -145,6 +146,21 @@ public class Gym4U {
         return false;
     }
 
+    public boolean verificaAmministratore(Integer codice) {
+        if (codice == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isIngressoInPalestra(Integer codice) {
+        if (codice == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    //UC1
     public void iscrizioneCorso(Integer codiceCliente) {
 
         List<Corso> corsi = visualizzaCorsi(codiceCliente);
@@ -187,10 +203,8 @@ public class Gym4U {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
         } while (!number);
-
-        System.out.println("Iscrizione al corso effettuata con successo.");
-
         pulisciCorrentiESelezionati();
+        System.out.println("Iscrizione al corso effettuata con successo.");
     }
 
     public List<Corso> visualizzaCorsi(Integer codiceCliente) {
@@ -230,6 +244,7 @@ public class Gym4U {
         corsoSelezionato = null;
     }
 
+    //UC2
     public void prenotazioneLezioneCorso(Integer codiceCliente) {
         Cliente cliente = clienti.get(codiceCliente);
         visualizzaCorsiCliente(cliente);
@@ -358,6 +373,7 @@ public class Gym4U {
         cliente.setPrenotazione(prenotazione);
     }
 
+    //UC3
     public void creaNuovoCorso() {
         infoNuovoCorso();
         Scanner scanner = new Scanner(System.in);
@@ -452,6 +468,7 @@ public class Gym4U {
         }
     }
 
+    //UC4
     public void registrazioneNuovoCliente() {
         if (!infoNuovoCliente())
             return;
@@ -616,100 +633,6 @@ public class Gym4U {
         return badge;
     }
 
-    public void prenotazioneLezionePT(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
-        this.clienteCorrente = cliente;
-
-        Map<Integer, PersonalTrainer> personalTrainers = visualizzaPersonalTrainer(cliente);
-        System.out.println("Personal trainer disponibili: ");
-        for (Map.Entry<Integer, PersonalTrainer> entry : personalTrainers.entrySet()) {
-            System.out.println(entry.getValue().toString());
-        }
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Inserisci il codice del personal trainer: ");
-        String codicePersonalTrainer = scanner.nextLine();
-
-        System.out.print("Inserisci il giorno della lezione (Monday->Sunday): ");
-        String giorno = scanner.nextLine();
-
-        System.out.print("Inserisci l'orario della lezione(HH:mm): ");
-        String ora = scanner.nextLine();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime time = LocalTime.parse(ora.trim(), formatter);
-
-        selezionaPersonalTrainer(codicePersonalTrainer, giorno, time, 1f);
-
-        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
-        Integer conferma = scanner.nextInt();
-        try {
-            switch (conferma) {
-                case 0:
-                    System.out.println("Prenotazione alla lezionePT annullata.");
-                    return;
-                case 1:
-                    confermaPrenotazione();
-                    break;
-                default:
-                    System.out.println("Inserisci un numero tra 0 e 1.");
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Input non valido. Inserisci un numero.");
-        }
-
-        System.out.println("Prenotazione alla lezionePT effettuata con successo.");
-        pulisciCorrentiESelezionati();
-    }
-
-    private Map<Integer, PersonalTrainer> visualizzaPersonalTrainer(Cliente cliente) {
-        if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
-            throw new RuntimeException(
-                    "Impossibile effettuare la prenotazione, cliente con certificato medico/abbonamento non valido.");
-        }
-        return this.personalTrainers;
-    }
-
-    private void selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
-            Float durataLezione) {
-        this.personalTrainerSelezionato = personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
-
-        DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
-        int giorniDiDifferenza = (giornoDaAggiungere.getValue() - LocalDate.now().getDayOfWeek().getValue() + 7) % 7;
-        LocalDate dataLezione = LocalDate.now().plusDays(giorniDiDifferenza);
-        System.out.println(dataLezione.toString());
-
-        Boolean personalTrainerDisponibile = isPersonalTrainerDisponibile(dataLezione, orarioLezione, durataLezione);
-        if (!personalTrainerDisponibile) {
-            throw new RuntimeException("Personal Trainer già impegnato durante l'orario selezionato.");
-        }
-        this.lezioneCorrente = new Lezione(dataLezione, orarioLezione, durataLezione, LezioneEnum.LezionePT);
-    }
-
-    private boolean isPersonalTrainerDisponibile(LocalDate dataLezione, LocalTime orarioLezione, Float durataLezione) {
-        Map<Integer, Lezione> lezioniPersonalTrainer = this.personalTrainerSelezionato.getLezioni();
-        System.out.println(this.personalTrainerSelezionato);
-        for (Lezione lezione : lezioniPersonalTrainer.values()) {
-            if (lezione.getGiorno().equals(dataLezione)) {
-                LocalTime inizioLezione = lezione.getOrario();
-                LocalTime fineLezione = inizioLezione.plusMinutes(lezione.getDurata().longValue() * 60);
-
-                LocalTime orarioLezioneFine = orarioLezione.plusMinutes(durataLezione.longValue() * 60);
-                if ((orarioLezione.isAfter(inizioLezione) && orarioLezione.isBefore(fineLezione))
-                        || (orarioLezione.isBefore(inizioLezione) && orarioLezioneFine.isAfter(inizioLezione))) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private void confermaPrenotazione() {
-        Prenotazione p = new Prenotazione();
-        confermaLezione(p, this.clienteCorrente, this.lezioneCorrente);
-        this.personalTrainerSelezionato.setLezione(this.lezioneCorrente);
-    }
-
     //UC5
     public void gestioneAbbonamento(Integer codiceCliente){
         Cliente cliente = clienti.get(codiceCliente);
@@ -836,5 +759,150 @@ public class Gym4U {
 
     public void confermaModificaMetodoDiPagamento(Cliente cliente) {
         cliente.setMetodoDiPagamento(this.metodoDiPagamentoCorrente);
+    }
+
+    //UC6
+    public void prenotazioneLezionePT(Integer codiceCliente) {
+        Cliente cliente = clienti.get(codiceCliente);
+        this.clienteCorrente = cliente;
+
+        Map<Integer, PersonalTrainer> personalTrainers = visualizzaPersonalTrainer(cliente);
+        System.out.println("Personal trainer disponibili: ");
+        for (Map.Entry<Integer, PersonalTrainer> entry : personalTrainers.entrySet()) {
+            System.out.println(entry.getValue().toString());
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Inserisci il codice del personal trainer: ");
+        String codicePersonalTrainer = scanner.nextLine();
+
+        System.out.print("Inserisci il giorno della lezione (Monday->Sunday): ");
+        String giorno = scanner.nextLine();
+
+        System.out.print("Inserisci l'orario della lezione(HH:mm): ");
+        String ora = scanner.nextLine();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime time = LocalTime.parse(ora.trim(), formatter);
+
+        selezionaPersonalTrainer(codicePersonalTrainer, giorno, time, 1f);
+
+        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+        Integer conferma = scanner.nextInt();
+        try {
+            switch (conferma) {
+                case 0:
+                    System.out.println("Prenotazione alla lezionePT annullata.");
+                    return;
+                case 1:
+                    confermaPrenotazione();
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 1.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+
+        System.out.println("Prenotazione alla lezionePT effettuata con successo.");
+        pulisciCorrentiESelezionati();
+    }
+
+    private Map<Integer, PersonalTrainer> visualizzaPersonalTrainer(Cliente cliente) {
+        if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
+            throw new RuntimeException(
+                    "Impossibile effettuare la prenotazione, cliente con certificato medico/abbonamento non valido.");
+        }
+        return this.personalTrainers;
+    }
+
+    private void selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
+            Float durataLezione) {
+        this.personalTrainerSelezionato = personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
+
+        DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
+        int giorniDiDifferenza = (giornoDaAggiungere.getValue() - LocalDate.now().getDayOfWeek().getValue() + 7) % 7;
+        LocalDate dataLezione = LocalDate.now().plusDays(giorniDiDifferenza);
+        System.out.println(dataLezione.toString());
+
+        Boolean personalTrainerDisponibile = isPersonalTrainerDisponibile(dataLezione, orarioLezione, durataLezione);
+        if (!personalTrainerDisponibile) {
+            throw new RuntimeException("Personal Trainer già impegnato durante l'orario selezionato.");
+        }
+        this.lezioneCorrente = new Lezione(dataLezione, orarioLezione, durataLezione, LezioneEnum.LezionePT);
+    }
+
+    private boolean isPersonalTrainerDisponibile(LocalDate dataLezione, LocalTime orarioLezione, Float durataLezione) {
+        Map<Integer, Lezione> lezioniPersonalTrainer = this.personalTrainerSelezionato.getLezioni();
+        System.out.println(this.personalTrainerSelezionato);
+        for (Lezione lezione : lezioniPersonalTrainer.values()) {
+            if (lezione.getGiorno().equals(dataLezione)) {
+                LocalTime inizioLezione = lezione.getOrario();
+                LocalTime fineLezione = inizioLezione.plusMinutes(lezione.getDurata().longValue() * 60);
+
+                LocalTime orarioLezioneFine = orarioLezione.plusMinutes(durataLezione.longValue() * 60);
+                if ((orarioLezione.isAfter(inizioLezione) && orarioLezione.isBefore(fineLezione))
+                        || (orarioLezione.isBefore(inizioLezione) && orarioLezioneFine.isAfter(inizioLezione))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void confermaPrenotazione() {
+        Prenotazione p = new Prenotazione();
+        confermaLezione(p, clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
+        personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
+    }
+
+    //UC10
+    public void accessoInPalestraTramiteBadge(Integer codiceBadge) {
+        Prenotazione prenotazione = accessoInPalestra(codiceBadge);
+
+        confermaPresenza();
+
+        System.out.println("Accesso in palestra acconsentito.");
+        pulisciCorrentiESelezionati();
+    }
+
+    private Prenotazione accessoInPalestra(Integer codiceBadge) {
+        if (!isBadgeValido(codiceBadge)) {
+            throw new RuntimeException("Il badge inserito non appartiene a nessun cliente.");
+        }
+
+        if (!isPrenotazioneValida()) {
+            throw new RuntimeException("Non esiste alcuna prenotazione valida associata a questo cliente.");
+        }
+
+        return prenotazioneCorrente;
+    }
+
+    private Boolean isBadgeValido(Integer codiceBadge) {
+        for (Cliente cliente : this.clienti.values()) {
+            if (cliente.getBadge().getCodice().equals(codiceBadge)) {
+                this.clienteCorrente = cliente;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean isPrenotazioneValida() {
+        for (Prenotazione p : this.clienteCorrente.getPrenotazioni().values()) {
+            if (p.getLezione().getGiorno().isEqual(LocalDate.now())) {
+                if (LocalTime.now().isAfter(p.getLezione().getOrario().minusMinutes(30))
+                        && (LocalTime.now().isBefore(p.getLezione().getOrario())
+                                || LocalTime.now().equals(p.getLezione().getOrario()))) {
+                    prenotazioneCorrente = p;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void confermaPresenza() {
+        prenotazioneCorrente.setValidata();
     }
 }
