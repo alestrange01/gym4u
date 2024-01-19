@@ -227,4 +227,97 @@ public class TestGym4U {
 
         assertEquals(corso, personalTrainer.getCorsi().get(corso.getCodiceUnivoco()));
     }
+
+    @Test
+    public void testNuovoCliente(){
+        gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                        "3331234567");
+        assertNotNull(gym4u.getClienteCorrente());
+    }
+
+    @Test
+    public void testConfermaNuovoCliente(){
+        gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                        "3331234567");    
+        gym4u.associaCertificatoMedico(LocalDate.now().plusDays(365));
+        gym4u.associaAbbonamento(1);
+        gym4u.associaMetodoDiPagamento(123456789, LocalDate.now().plusDays(365));
+        Integer codiceCliente = gym4u.getClienteCorrente().getCodice();
+        Badge badge = gym4u.confermaCliente();
+
+        assertNull(gym4u.getClienteCorrente());
+        assertNotNull(badge);
+        assertEquals(badge, gym4u.getClienti().get(codiceCliente).getBadge());
+        assertTrue(gym4u.getClienti().get(codiceCliente).verificaCertificatoMedico());
+        assertTrue(gym4u.getClienti().get(codiceCliente).verificaAbbonamento());
+        assertTrue(gym4u.getClienti().get(codiceCliente).getMetodoDiPagamento().verificaMetodoDiPagamento());
+    }
+
+
+    @Test 
+    public void testModificaAbbonamento(){
+        gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                        "3331234567");    
+        gym4u.associaCertificatoMedico(LocalDate.now().plusDays(365));
+        gym4u.associaAbbonamento(1);
+        gym4u.associaMetodoDiPagamento(123456789, LocalDate.now().plusDays(365));
+        Integer codiceCliente = gym4u.getClienteCorrente().getCodice();
+        gym4u.confermaCliente();
+
+        gym4u.modificaAbbonamento(1, gym4u.getClienti().get(codiceCliente));
+        Abbonamento abbonamentoCorrente = gym4u.getAbbonamentoCorrente();
+        assertNotNull(abbonamentoCorrente);
+        assertEquals(abbonamentoCorrente, gym4u.getAbbonamentoCorrente());
+    }
+
+    @Test
+    public void testConfermaModificaAbbonamento(){
+        gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                        "3331234567");    
+        gym4u.associaCertificatoMedico(LocalDate.now().plusDays(365));
+        gym4u.associaAbbonamento(1);
+        gym4u.associaMetodoDiPagamento(123456789, LocalDate.now().plusDays(365));
+        Integer codiceCliente = gym4u.getClienteCorrente().getCodice();
+        gym4u.confermaCliente();
+        gym4u.modificaAbbonamento(1, gym4u.getClienti().get(codiceCliente));
+        Abbonamento a = gym4u.getAbbonamentoCorrente();
+
+        gym4u.confermaModificaAbbonamento(gym4u.getClienti().get(codiceCliente));
+        assertEquals(a, gym4u.getClienti().get(codiceCliente).getAbbonamento());
+        assertNull(gym4u.getAbbonamentoCorrente());
+    }
+
+    @Test
+    public void testModificaMetodoDiPagamento(){
+        gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                        "3331234567");    
+        gym4u.associaCertificatoMedico(LocalDate.now().plusDays(365));
+        gym4u.associaAbbonamento(1);
+        gym4u.associaMetodoDiPagamento(123456789, LocalDate.now().plusDays(365));
+        Integer codiceCliente = gym4u.getClienteCorrente().getCodice();
+        gym4u.confermaCliente();
+
+        gym4u.modificaMetodoDiPagamento(987654321, LocalDate.now().plusDays(365), gym4u.getClienti().get(codiceCliente));
+        MetodoDiPagamento metodoDiPagamentoCorrente = gym4u.getMetodoDiPagamentoCorrente();
+        assertNotNull(metodoDiPagamentoCorrente);
+        assertEquals(metodoDiPagamentoCorrente, gym4u.getMetodoDiPagamentoCorrente());
+    }
+
+    @Test
+    public void testConfermaModificaMetodoDiPagamento(){
+        gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                        "3331234567");    
+        gym4u.associaCertificatoMedico(LocalDate.now().plusDays(365));
+        gym4u.associaAbbonamento(1);
+        gym4u.associaMetodoDiPagamento(123456789, LocalDate.now().plusDays(365));
+        Integer codiceCliente = gym4u.getClienteCorrente().getCodice();
+        gym4u.confermaCliente();
+        gym4u.modificaMetodoDiPagamento(987654321, LocalDate.now().plusDays(365), gym4u.getClienti().get(codiceCliente));
+        MetodoDiPagamento m = gym4u.getMetodoDiPagamentoCorrente();
+
+        gym4u.confermaModificaMetodoDiPagamento(gym4u.getClienti().get(codiceCliente));
+        assertEquals(m, gym4u.getClienti().get(codiceCliente).getMetodoDiPagamento());
+        assertNull(gym4u.getMetodoDiPagamentoCorrente());
+    }
+
 }
