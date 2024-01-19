@@ -810,7 +810,7 @@ public class Gym4U {
         Cliente cliente = clienti.get(codiceCliente);
         this.clienteCorrente = cliente;
 
-        Map<Integer, PersonalTrainer> personalTrainers = visualizzaPersonalTrainer(cliente);
+        Map<Integer, PersonalTrainer> personalTrainers = visualizzaPersonalTrainers(cliente);
         System.out.println("Personal trainer disponibili: ");
         for (Map.Entry<Integer, PersonalTrainer> entry : personalTrainers.entrySet()) {
             System.out.println(entry.getValue().toString());
@@ -852,7 +852,7 @@ public class Gym4U {
         pulisciCorrentiESelezionati();
     }
 
-    public Map<Integer, PersonalTrainer> visualizzaPersonalTrainer(Cliente cliente) {
+    public Map<Integer, PersonalTrainer> visualizzaPersonalTrainers(Cliente cliente) {
         if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
             throw new RuntimeException(
                     "Impossibile effettuare la prenotazione, cliente con certificato medico/abbonamento non valido.");

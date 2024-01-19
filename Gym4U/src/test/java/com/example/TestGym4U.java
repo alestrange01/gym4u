@@ -328,13 +328,13 @@ public class TestGym4U {
 
 
     @Test
-    public void testVisualizzaPersonalTrainer(){
+    public void testVisualizzaPersonalTrainers(){
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
         "3331234567");
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
-        assertEquals(gym4u.getPersonalTrainers(), gym4u.visualizzaPersonalTrainer(cliente));
+        assertEquals(gym4u.getPersonalTrainers(), gym4u.visualizzaPersonalTrainers(cliente));
     }
 
     @Test
