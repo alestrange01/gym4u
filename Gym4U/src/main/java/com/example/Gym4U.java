@@ -63,6 +63,18 @@ public class Gym4U {
         return clienti;
     }
 
+    public Cliente getClienteCorrente() {
+        return clienteCorrente;
+    }
+
+    public Abbonamento getAbbonamentoCorrente() {
+        return abbonamentoCorrente;
+    }
+
+    public MetodoDiPagamento getMetodoDiPagamentoCorrente() {
+        return metodoDiPagamentoCorrente;
+    }
+
     public Corso getCorsoCorrente() {
         return corsoCorrente;
     }
@@ -666,7 +678,7 @@ public class Gym4U {
                         String tipologiaAbbonamentoInput = scanner.nextLine();
                         tipologiaAbbonamento = Integer.parseInt(tipologiaAbbonamentoInput);
                     } while (tipologiaAbbonamento != 1 && tipologiaAbbonamento != 2 && tipologiaAbbonamento != 3);
-                    this.abbonamentoCorrente = modificaAbbonamento(tipologiaAbbonamento, cliente);
+                    modificaAbbonamento(tipologiaAbbonamento, cliente);
                     System.out.println("Abbonamento selezionato: ");
                     System.out.println(this.abbonamentoCorrente.toString());
 
@@ -710,7 +722,7 @@ public class Gym4U {
                             System.out.println("Data non valida. Inserisci una data valida.");
                         }
                     } while (dataScadenzaCarta == null);
-                        this.metodoDiPagamentoCorrente = modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta, cliente);
+                        modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta, cliente);
                         System.out.println("Metodo di pagamento inserito: ");
                         System.out.println(this.metodoDiPagamentoCorrente.toString());
 
@@ -745,20 +757,22 @@ public class Gym4U {
         pulisciCorrentiESelezionati();
     }
 
-    public Abbonamento modificaAbbonamento(Integer tipologiaAbbonamento, Cliente cliente) {
-        return cliente.modificaAbbonamento(tipologiaAbbonamento);
+    public void modificaAbbonamento(Integer tipologiaAbbonamento, Cliente cliente) {
+        this.abbonamentoCorrente = cliente.modificaAbbonamento(tipologiaAbbonamento);
     }
 
     public void confermaModificaAbbonamento(Cliente cliente) {
         cliente.setAbbonamento(this.abbonamentoCorrente);
+        this.abbonamentoCorrente = null;
     }
 
-    public MetodoDiPagamento modificaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta, Cliente cliente) {
-        return cliente.modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+    public void modificaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta, Cliente cliente) {
+        this.metodoDiPagamentoCorrente = cliente.modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
     }
 
     public void confermaModificaMetodoDiPagamento(Cliente cliente) {
         cliente.setMetodoDiPagamento(this.metodoDiPagamentoCorrente);
+        this.metodoDiPagamentoCorrente = null;
     }
 
     //UC6

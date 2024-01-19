@@ -15,6 +15,10 @@ public class MetodoDiPagamento {
         return this.dataScadenza;
     }
 
+    public boolean verificaMetodoDiPagamento() {
+        return LocalDate.now().isBefore(this.dataScadenza);
+    }
+
     public String toString() {
         return "Metodo di pagamento: \n" +
                 "Data scadenza: " + this.dataScadenza + "\n" +
