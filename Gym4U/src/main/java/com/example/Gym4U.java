@@ -687,8 +687,6 @@ public class Gym4U {
         System.out.println(cliente.getMetodoDiPagamento().toString());
 
         Scanner scanner = new Scanner(System.in);
-        // TODO Gestire eventuale elimina abbonamento? Non so se ha senso farlo perchè
-        // mai eliminare l'abbonamento prima che scada?
         System.out.print("Inserisci il numero dell'opzione desiderata:\n" +
                 "1. Modifica abbonamento\n" +
                 "2. Modifica metodo di pagamento\n" +

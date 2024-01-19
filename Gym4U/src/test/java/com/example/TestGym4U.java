@@ -399,11 +399,6 @@ public class TestGym4U {
     }
 
     @Test
-    public void testAccessoInPalestra(){
-        //TODO?
-    }
-
-    @Test
     public void testIsBadgeValido(){
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
         "3331234567");
