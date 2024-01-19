@@ -22,6 +22,10 @@ public class Prenotazione {
         return this.lezione;
     }
 
+    public Boolean getValidata(){
+        return this.validata;
+    }
+
     public void setLezione(Lezione l){
         this.lezione = l;
     }

@@ -87,6 +87,10 @@ public class Gym4U {
         return prenotazioni;
     }
 
+    public Lezione getLezioneCorrente() {
+        return this.lezioneCorrente;
+    }
+
     public void setClienti(Map<Integer, Cliente> clienti) {
         this.clienti = clienti;
     }
@@ -99,9 +103,37 @@ public class Gym4U {
         this.corsiDisponibili = corsiDisponibili;
     }
 
+    public void setPersonalTrainerSelezionato(PersonalTrainer personalTrainer) {
+        this.personalTrainerSelezionato = personalTrainer;
+    }
+
+    public PersonalTrainer getPersonalTrainerSelezionato() {
+        return this.personalTrainerSelezionato;
+    }
+
+    public void setPersonalTrainers(Map<Integer, PersonalTrainer> personalTrainers){
+        this.personalTrainers = personalTrainers;
+    }
+
+    public void setLezioneCorrente(Lezione lezione){
+        this.lezioneCorrente = lezione;
+    }
+
     public void setCorsi(Map<Integer, Corso> corsi) {
         this.corsi = corsi;
     }
+
+    public Prenotazione getPrenotazioneCorrente(){
+        return this.prenotazioneCorrente;
+    }
+
+    public void setPrenotazioneCorrente(Prenotazione prenotazione){
+        this.prenotazioneCorrente = prenotazione;
+    }
+
+    public void setClienteCorrente(Cliente cliente){
+        this.clienteCorrente = cliente;
+    }  
 
     public void loadData() {
         // Avviamento
@@ -172,7 +204,7 @@ public class Gym4U {
         return false;
     }
 
-    //UC1
+    // UC1
     public void iscrizioneCorso(Integer codiceCliente) {
 
         List<Corso> corsi = visualizzaCorsi(codiceCliente);
@@ -256,7 +288,7 @@ public class Gym4U {
         corsoSelezionato = null;
     }
 
-    //UC2
+    // UC2
     public void prenotazioneLezioneCorso(Integer codiceCliente) {
         Cliente cliente = clienti.get(codiceCliente);
         visualizzaCorsiCliente(cliente);
@@ -385,7 +417,7 @@ public class Gym4U {
         cliente.setPrenotazione(prenotazione);
     }
 
-    //UC3
+    // UC3
     public void creaNuovoCorso() {
         infoNuovoCorso();
         Scanner scanner = new Scanner(System.in);
@@ -480,7 +512,7 @@ public class Gym4U {
         }
     }
 
-    //UC4
+    // UC4
     public void registrazioneNuovoCliente() {
         if (!infoNuovoCliente())
             return;
@@ -645,8 +677,8 @@ public class Gym4U {
         return badge;
     }
 
-    //UC5
-    public void gestioneAbbonamento(Integer codiceCliente){
+    // UC5
+    public void gestioneAbbonamento(Integer codiceCliente) {
         Cliente cliente = clienti.get(codiceCliente);
 
         System.out.println("Abbonamento attuale: ");
@@ -655,7 +687,8 @@ public class Gym4U {
         System.out.println(cliente.getMetodoDiPagamento().toString());
 
         Scanner scanner = new Scanner(System.in);
-        //TODO Gestire eventuale elimina abbonamento? Non so se ha senso farlo perchè mai eliminare l'abbonamento prima che scada?
+        // TODO Gestire eventuale elimina abbonamento? Non so se ha senso farlo perchè
+        // mai eliminare l'abbonamento prima che scada?
         System.out.print("Inserisci il numero dell'opzione desiderata:\n" +
                 "1. Modifica abbonamento\n" +
                 "2. Modifica metodo di pagamento\n" +
@@ -726,25 +759,24 @@ public class Gym4U {
                         System.out.println("Metodo di pagamento inserito: ");
                         System.out.println(this.metodoDiPagamentoCorrente.toString());
 
-                        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
-                        conferma = scanner.nextInt();
-                        try {
-                            switch (conferma) {
-                                case 0:
-                                    System.out.println("Modifica metodo di pagamento annullata.");
-                                    return;
-                                case 1:
-                                    confermaModificaMetodoDiPagamento(cliente);
-                                    System.out.println("Modifiche avvenute con successo.");
-                                    break;
-                                default:
-                                    System.out.println("Inserisci un numero tra 0 e 1.");
-                                    break;
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Input non valido. Inserisci un numero.");
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    try {
+                        switch (conferma) {
+                            case 0:
+                                System.out.println("Modifica metodo di pagamento annullata.");
+                                return;
+                            case 1:
+                                confermaModificaMetodoDiPagamento(cliente);
+                                System.out.println("Modifiche avvenute con successo.");
+                                break;
+                            default:
+                                System.out.println("Inserisci un numero tra 0 e 1.");
+                                break;
                         }
-
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input non valido. Inserisci un numero.");
+                    }
 
                     break;
                 default:
@@ -775,7 +807,7 @@ public class Gym4U {
         this.metodoDiPagamentoCorrente = null;
     }
 
-    //UC6
+    // UC6
     public void prenotazioneLezionePT(Integer codiceCliente) {
         Cliente cliente = clienti.get(codiceCliente);
         this.clienteCorrente = cliente;
@@ -822,7 +854,7 @@ public class Gym4U {
         pulisciCorrentiESelezionati();
     }
 
-    private Map<Integer, PersonalTrainer> visualizzaPersonalTrainer(Cliente cliente) {
+    public Map<Integer, PersonalTrainer> visualizzaPersonalTrainer(Cliente cliente) {
         if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
             throw new RuntimeException(
                     "Impossibile effettuare la prenotazione, cliente con certificato medico/abbonamento non valido.");
@@ -830,14 +862,13 @@ public class Gym4U {
         return this.personalTrainers;
     }
 
-    private void selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
+    public void selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
             Float durataLezione) {
         this.personalTrainerSelezionato = personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
 
         DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
         int giorniDiDifferenza = (giornoDaAggiungere.getValue() - LocalDate.now().getDayOfWeek().getValue() + 7) % 7;
         LocalDate dataLezione = LocalDate.now().plusDays(giorniDiDifferenza);
-        System.out.println(dataLezione.toString());
 
         Boolean personalTrainerDisponibile = isPersonalTrainerDisponibile(dataLezione, orarioLezione, durataLezione);
         if (!personalTrainerDisponibile) {
@@ -846,9 +877,9 @@ public class Gym4U {
         this.lezioneCorrente = new Lezione(dataLezione, orarioLezione, durataLezione, LezioneEnum.LezionePT);
     }
 
-    private boolean isPersonalTrainerDisponibile(LocalDate dataLezione, LocalTime orarioLezione, Float durataLezione) {
-        Map<Integer, Lezione> lezioniPersonalTrainer = this.personalTrainerSelezionato.getLezioni();
+    public boolean isPersonalTrainerDisponibile(LocalDate dataLezione, LocalTime orarioLezione, Float durataLezione) {
         System.out.println(this.personalTrainerSelezionato);
+        Map<Integer, Lezione> lezioniPersonalTrainer = this.personalTrainerSelezionato.getLezioni();
         for (Lezione lezione : lezioniPersonalTrainer.values()) {
             if (lezione.getGiorno().equals(dataLezione)) {
                 LocalTime inizioLezione = lezione.getOrario();
@@ -856,7 +887,7 @@ public class Gym4U {
 
                 LocalTime orarioLezioneFine = orarioLezione.plusMinutes(durataLezione.longValue() * 60);
                 if ((orarioLezione.isAfter(inizioLezione) && orarioLezione.isBefore(fineLezione))
-                        || (orarioLezione.isBefore(inizioLezione) && orarioLezioneFine.isAfter(inizioLezione))) {
+                        || ((orarioLezione.isBefore(inizioLezione) || orarioLezione.equals(inizioLezione)) && orarioLezioneFine.isAfter(inizioLezione))) {
                     return false;
                 }
             }
@@ -864,13 +895,13 @@ public class Gym4U {
         return true;
     }
 
-    private void confermaPrenotazione() {
+    public void confermaPrenotazione() {
         Prenotazione p = new Prenotazione();
         confermaLezione(p, clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
         personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
     }
 
-    //UC10
+    // UC10
     public void accessoInPalestraTramiteBadge(Integer codiceBadge) {
         Prenotazione prenotazione = accessoInPalestra(codiceBadge);
 
@@ -880,7 +911,7 @@ public class Gym4U {
         pulisciCorrentiESelezionati();
     }
 
-    private Prenotazione accessoInPalestra(Integer codiceBadge) {
+    public Prenotazione accessoInPalestra(Integer codiceBadge) {
         if (!isBadgeValido(codiceBadge)) {
             throw new RuntimeException("Il badge inserito non appartiene a nessun cliente.");
         }
@@ -889,10 +920,10 @@ public class Gym4U {
             throw new RuntimeException("Non esiste alcuna prenotazione valida associata a questo cliente.");
         }
 
-        return prenotazioneCorrente;
+        return this.prenotazioneCorrente;
     }
 
-    private Boolean isBadgeValido(Integer codiceBadge) {
+    public Boolean isBadgeValido(Integer codiceBadge) {
         for (Cliente cliente : this.clienti.values()) {
             if (cliente.getBadge().getCodice().equals(codiceBadge)) {
                 this.clienteCorrente = cliente;
@@ -902,13 +933,13 @@ public class Gym4U {
         return false;
     }
 
-    private Boolean isPrenotazioneValida() {
+    public Boolean isPrenotazioneValida() {
         for (Prenotazione p : this.clienteCorrente.getPrenotazioni().values()) {
             if (p.getLezione().getGiorno().isEqual(LocalDate.now())) {
                 if (LocalTime.now().isAfter(p.getLezione().getOrario().minusMinutes(30))
                         && (LocalTime.now().isBefore(p.getLezione().getOrario())
                                 || LocalTime.now().equals(p.getLezione().getOrario()))) {
-                    prenotazioneCorrente = p;
+                    this.prenotazioneCorrente = p;
                     return true;
                 }
             }
@@ -916,7 +947,7 @@ public class Gym4U {
         return false;
     }
 
-    private void confermaPresenza() {
-        prenotazioneCorrente.setValidata();
+    public void confermaPresenza() {
+        this.prenotazioneCorrente.setValidata();
     }
 }
