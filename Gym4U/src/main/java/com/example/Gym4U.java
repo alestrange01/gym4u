@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 //Singleton GoF
 public class Gym4U {
-
+    
     private static Gym4U instance;
     private Map<Integer, PersonalTrainer> personalTrainers;
     private Map<Integer, Cliente> clienti;
@@ -168,7 +168,6 @@ public class Gym4U {
     }
 
     public void loadData() {
-        // Avviamento
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
                 "mariorossi@gmail.com", "3394309876");
@@ -362,7 +361,6 @@ public class Gym4U {
             }
         } while (this.corsoSelezionato == null);
 
-        // rimuovo lezioni prima di oggi e ordino cronologicamente
         lezioni.entrySet().removeIf(entry -> entry.getValue().getGiorno().isBefore(LocalDate.now()));
         lezioni = lezioni.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue((l1, l2) -> l1.getGiorno().compareTo(l2.getGiorno())))
@@ -432,7 +430,6 @@ public class Gym4U {
         if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
             throw new RuntimeException("Certificato medico o/e abbonamento del cliente non valido.");
         }
-        //verifico che il cliente abbia almeno un corso
         if (cliente.getCorsi().isEmpty()) {
             System.out.println("Non sei iscritto a nessun corso.");
             return false;
@@ -457,7 +454,6 @@ public class Gym4U {
     }
 
     public boolean prenotazionePossibile(Lezione lezione, Cliente cliente) {
-        // controllo che il cliente non abbia una lezione prenotata lo stesso giorno
         for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
             if (entry.getValue().getLezione().getGiorno().equals(lezione.getGiorno())) {
                 System.out.println("Hai già prenotato una lezione per questo giorno.");
@@ -531,7 +527,7 @@ public class Gym4U {
         System.out.print("Inserisci gli orari (HH:mm) disponibili del corso separati da una virgola: ");
         String[] orariInput = scanner.nextLine().split(",");
         List<LocalTime> orariDisponibili = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm"); // Formato degli orari (ad esempio, "13:30")
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm"); 
         for (String orario : orariInput) {
             LocalTime time = LocalTime.parse(orario.trim(), formatter);
             orariDisponibili.add(time);
@@ -614,7 +610,7 @@ public class Gym4U {
         System.out.println("Riepilogo informazioni inserite: ");
         System.out.print(this.clienteCorrente.toString());
 
-        // certificato medico
+
         LocalDate dataScadenzaCertificatoMedico = null;
         do {
             try {
@@ -632,7 +628,7 @@ public class Gym4U {
         }
         associaCertificatoMedico(dataScadenzaCertificatoMedico);
 
-        // abbonamento
+
         Integer tipologiaAbbonamento = null;
         do {
             System.out.print("Inserire la tipologia di abbonamento:\n" +
@@ -645,7 +641,7 @@ public class Gym4U {
         } while (tipologiaAbbonamento != 1 && tipologiaAbbonamento != 2 && tipologiaAbbonamento != 3);
         associaAbbonamento(tipologiaAbbonamento);
 
-        // metodo di pagamento
+
         LocalDate dataScadenzaCarta = null;
         Integer numeroCarta = null;
         do {
@@ -667,7 +663,6 @@ public class Gym4U {
         } while (dataScadenzaCarta == null);
         associaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
 
-        // riepilogo informazioni inserite
         System.out.println("Riepilogo informazioni inserite: ");
         System.out.println(this.clienteCorrente.toString());
         System.out.println(this.clienteCorrente.getCertificatoMedico().toString());
