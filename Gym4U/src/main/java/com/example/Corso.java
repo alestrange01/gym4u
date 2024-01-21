@@ -57,34 +57,33 @@ public class Corso {
         }
     }
 
-    public Integer getCodiceUnivoco() {
-        return this.codiceUnivoco;
-    }
-
     public Corso getCorso() {
         return this;
     }
 
+    public Integer getCodiceUnivoco() {
+        return this.codiceUnivoco;
+    }
+
     public Map<Integer, Lezione> getLezioni() {
-
         return this.lezioni;
-    }
-
-    public Lezione selezionaLezione(Integer codice) {
-        return this.lezioni.get(codice);
-    }
-
-    public List<Integer> getIdsPersonalTrainer() {
-        return this.idsPersonalTrainer;
     }
 
     public Integer getDisponibilità() {
         return this.postiDisponibili;
     }
 
+    public List<Integer> getIdsPersonalTrainer() {
+        return this.idsPersonalTrainer;
+    }
+
     public void diminuisciDisponibilità() {
         if (this.postiDisponibili > 0)
             this.postiDisponibili--;
+    }
+    
+    public Lezione selezionaLezione(Integer codice) {
+        return this.lezioni.get(codice);
     }
 
     public String toString() {

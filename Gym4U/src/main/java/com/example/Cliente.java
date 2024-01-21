@@ -14,13 +14,13 @@ public class Cliente {
     private String indirizzo;
     private String email;
     private String telefono;
-
     private Abbonamento abbonamento;
     private CertificatoMedico certificatoMedico;
     private Map<Integer, Corso> corsi;
     private Map<Integer, Prenotazione> prenotazioni;
     private Badge badge;
     private MetodoDiPagamento metodoDiPagamento;
+    private SchedaPersonalizzata schedaPersonalizzata;
 
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
@@ -31,16 +31,25 @@ public class Cliente {
         this.indirizzo = indirizzo;
         this.email = email;
         this.telefono = telefono;
+        this.abbonamento = null;
+        this.certificatoMedico = null;
         this.corsi = new HashMap<Integer, Corso>();
         this.prenotazioni = new HashMap<Integer, Prenotazione>();
-        this.certificatoMedico = null;
-        this.abbonamento = null;
         this.badge = new Badge();
         this.metodoDiPagamento = null;
+        this.schedaPersonalizzata = null;
     }
 
     public Integer getCodice() {
         return this.codice;
+    }
+
+    public Abbonamento getAbbonamento() {
+        return this.abbonamento;
+    }
+
+    public CertificatoMedico getCertificatoMedico() {
+        return this.certificatoMedico;
     }
 
     public Map<Integer, Corso> getCorsi() {
@@ -51,12 +60,40 @@ public class Cliente {
         return prenotazioni;
     }
 
-    public Abbonamento getAbbonamento() {
-        return this.abbonamento;
+    public Badge getBadge() {
+        return this.badge;
+    }
+
+    public MetodoDiPagamento getMetodoDiPagamento() {
+        return this.metodoDiPagamento;
+    }
+
+    public SchedaPersonalizzata getSchedaPersonalizzata() {
+        return this.schedaPersonalizzata;
     }
 
     public void setAbbonamento(Abbonamento abbonamento) {
         this.abbonamento = abbonamento;
+    }
+
+    public void setCertificatoMedico(CertificatoMedico certificatoMedico) {
+        this.certificatoMedico = certificatoMedico;
+    }
+
+    public void setCorso(Corso c) {
+        this.corsi.put(c.getCodiceUnivoco(), c);
+    }
+
+    public void setPrenotazione(Prenotazione p) {
+        this.prenotazioni.put(p.getCodice(), p);
+    }
+
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
+
+    public void setSchedaPersonalizzata(SchedaPersonalizzata sp) {
+        this.schedaPersonalizzata = sp;
     }
 
     public void associaAbbonamento(Integer tipologiaAbbonamento) {
@@ -100,8 +137,17 @@ public class Cliente {
         }
     }
 
-    public MetodoDiPagamento getMetodoDiPagamento() {
-        return this.metodoDiPagamento;
+    public boolean verificaAbbonamento() {
+        return this.abbonamento.verificaAbbonamento();
+    }
+
+    public void associaCertificatoMedico(LocalDate dataScadenza) {
+        CertificatoMedico certificatoMedico = new CertificatoMedico(dataScadenza);
+        setCertificatoMedico(certificatoMedico);
+    }
+
+    public boolean verificaCertificatoMedico() {
+        return this.certificatoMedico.verificaCertificatoMedico();
     }
 
     public void setMetodoDiPagamento(MetodoDiPagamento metodoDiPagamento) {
@@ -116,43 +162,6 @@ public class Cliente {
     public MetodoDiPagamento modificaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta) {
         MetodoDiPagamento metodoDiPagamento = new MetodoDiPagamento(numeroCarta, dataScadenzaCarta);
         return metodoDiPagamento;
-    }
-
-    public CertificatoMedico getCertificatoMedico() {
-        return this.certificatoMedico;
-    }
-
-    public void setCertificatoMedico(CertificatoMedico certificatoMedico) {
-        this.certificatoMedico = certificatoMedico;
-    }
-
-    public void associaCertificatoMedico(LocalDate dataScadenza) {
-        CertificatoMedico certificatoMedico = new CertificatoMedico(dataScadenza);
-        setCertificatoMedico(certificatoMedico);
-    }
-
-    public void setPrenotazione(Prenotazione p) {
-        this.prenotazioni.put(p.getCodice(), p);
-    }
-
-    public void setCorso(Corso c) {
-        this.corsi.put(c.getCodiceUnivoco(), c);
-    }
-
-    public boolean verificaCertificatoMedico() {
-        return this.certificatoMedico.verificaCertificatoMedico();
-    }
-
-    public boolean verificaAbbonamento() {
-        return this.abbonamento.verificaAbbonamento();
-    }
-
-    public Badge getBadge() {
-        return this.badge;
-    }
-
-    public void setBadge(Badge badge) {
-        this.badge = badge;
     }
 
     public void creaBadge() {

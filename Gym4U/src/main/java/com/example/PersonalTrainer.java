@@ -9,11 +9,13 @@ public class PersonalTrainer {
     private Integer codice;
     private Map<Integer, Corso> corsi;
     private Map<Integer, Lezione> lezioni;
+    private Map<Integer, SchedaPersonalizzata> schedePersonalizzate;
 
     public PersonalTrainer() {
         this.codice = new Random().nextInt();
         this.corsi = new HashMap<Integer, Corso>();
         this.lezioni = new HashMap<Integer, Lezione>();
+        this.schedePersonalizzate = new HashMap<Integer, SchedaPersonalizzata>();
     }
 
     public Integer getCodice() {
@@ -28,12 +30,21 @@ public class PersonalTrainer {
         return this.lezioni;
     }
 
+
+    public Map<Integer, SchedaPersonalizzata> getSchedePersonalizzate(){
+        return this.schedePersonalizzate;
+    }
+
     public void setCorso(Corso c) {
         this.corsi.put(c.getCodiceUnivoco(), c);
     }
 
     public void setLezione(Lezione l) {
         this.lezioni.put(l.getCodice(), l);
+    }
+
+    public void setSchedaPersonalizzata(SchedaPersonalizzata sp) {
+        this.schedePersonalizzate.put(sp.getCodice(), sp);
     }
 
     public String toString() {

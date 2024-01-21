@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +32,9 @@ public class Gym4U {
     private PersonalTrainer personalTrainerSelezionato;
     private Abbonamento abbonamentoCorrente;
     private MetodoDiPagamento metodoDiPagamentoCorrente;
+    private SchedaPersonalizzata schedaPersonalizzataCorrente;
+    private Offerta offertaCorrente;
+    private Map<Integer, Offerta> offerte;
 
     private Gym4U() {
         this.clienti = new HashMap<Integer, Cliente>();
@@ -45,6 +49,9 @@ public class Gym4U {
         this.personalTrainerSelezionato = null;
         this.abbonamentoCorrente = null;
         this.metodoDiPagamentoCorrente = null;
+        this.schedaPersonalizzataCorrente = null;
+        this.offertaCorrente = null;
+        this.offerte = new HashMap<Integer, Offerta>();
         loadData();
     }
 
@@ -111,11 +118,11 @@ public class Gym4U {
         return this.personalTrainerSelezionato;
     }
 
-    public void setPersonalTrainers(Map<Integer, PersonalTrainer> personalTrainers){
+    public void setPersonalTrainers(Map<Integer, PersonalTrainer> personalTrainers) {
         this.personalTrainers = personalTrainers;
     }
 
-    public void setLezioneCorrente(Lezione lezione){
+    public void setLezioneCorrente(Lezione lezione) {
         this.lezioneCorrente = lezione;
     }
 
@@ -123,17 +130,41 @@ public class Gym4U {
         this.corsi = corsi;
     }
 
-    public Prenotazione getPrenotazioneCorrente(){
+    public Prenotazione getPrenotazioneCorrente() {
         return this.prenotazioneCorrente;
     }
 
-    public void setPrenotazioneCorrente(Prenotazione prenotazione){
+    public void setPrenotazioneCorrente(Prenotazione prenotazione) {
         this.prenotazioneCorrente = prenotazione;
     }
 
-    public void setClienteCorrente(Cliente cliente){
+    public void setClienteCorrente(Cliente cliente) {
         this.clienteCorrente = cliente;
-    }  
+    }
+
+    public Offerta getOffertaCorrente() {
+        return this.offertaCorrente;
+    }
+
+    public void setOffertaCorrente(Offerta offerta) {
+        this.offertaCorrente = offerta;
+    }
+
+    public Map<Integer, Offerta> getOfferte() {
+        return this.offerte;
+    }
+
+    public SchedaPersonalizzata getSchedaPersonalizzataCorrente() {
+        return this.schedaPersonalizzataCorrente;
+    }
+
+    public void setSchedaPersonalizzataCorrente(SchedaPersonalizzata schedaPersonalizzata) {
+        this.schedaPersonalizzataCorrente = schedaPersonalizzata;
+    }
+
+    // public Map<Integer, Offerta> getOfferte(){
+    // return this.offerte;
+    // }
 
     public void loadData() {
         // Avviamento
@@ -180,6 +211,8 @@ public class Gym4U {
         this.personalTrainerSelezionato = null;
         this.abbonamentoCorrente = null;
         this.metodoDiPagamentoCorrente = null;
+        this.schedaPersonalizzataCorrente = null;
+        this.offertaCorrente = null;
     }
 
     public boolean verificaCliente(Integer codiceCliente) {
@@ -199,6 +232,14 @@ public class Gym4U {
 
     public boolean isIngressoInPalestra(Integer codice) {
         if (codice == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isPersonalTrainer(Integer codice) {
+        PersonalTrainer personalTrainer = personalTrainers.get(codice);
+        if (personalTrainer != null) {
             return true;
         }
         return false;
@@ -753,9 +794,9 @@ public class Gym4U {
                             System.out.println("Data non valida. Inserisci una data valida.");
                         }
                     } while (dataScadenzaCarta == null);
-                        modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta, cliente);
-                        System.out.println("Metodo di pagamento inserito: ");
-                        System.out.println(this.metodoDiPagamentoCorrente.toString());
+                    modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta, cliente);
+                    System.out.println("Metodo di pagamento inserito: ");
+                    System.out.println(this.metodoDiPagamentoCorrente.toString());
 
                     System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
                     conferma = scanner.nextInt();
@@ -885,7 +926,8 @@ public class Gym4U {
 
                 LocalTime orarioLezioneFine = orarioLezione.plusMinutes(durataLezione.longValue() * 60);
                 if ((orarioLezione.isAfter(inizioLezione) && orarioLezione.isBefore(fineLezione))
-                        || ((orarioLezione.isBefore(inizioLezione) || orarioLezione.equals(inizioLezione)) && orarioLezioneFine.isAfter(inizioLezione))) {
+                        || ((orarioLezione.isBefore(inizioLezione) || orarioLezione.equals(inizioLezione))
+                                && orarioLezioneFine.isAfter(inizioLezione))) {
                     return false;
                 }
             }
@@ -897,6 +939,223 @@ public class Gym4U {
         Prenotazione p = new Prenotazione();
         confermaLezione(p, clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
         personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
+    }
+
+    // UC7
+    public void creazioneDiUnOffertaPromozionale() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Inserisci la percentuale di sconto: (ex. 10)");
+        Integer sconto = scanner.nextInt();
+
+        LocalDate dataInizio = null;
+        LocalDate dataFine = null;
+        scanner.nextLine();
+        do {
+            try {
+                System.out.print("Inserisci la data di inizio dell’offerta (yyyy-MM-dd): ");
+                String dataInizioInput = scanner.nextLine();
+                dataInizio = LocalDate.parse(dataInizioInput);
+
+                System.out.print("Inserisci la data di fine dell’offerta (yyyy-MM-dd): ");
+                String dataFineInput = scanner.nextLine();
+                dataFine = LocalDate.parse(dataFineInput);
+
+                if (dataFine.isBefore(dataInizio)) {
+                    System.out.println("La data di fine deve essere successiva alla data di inizio. Riprova.");
+                    dataFine = null;
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Data non valida. Inserisci una data valida.");
+            }
+        } while (dataInizio == null || dataFine == null);
+
+        Offerta offerta = inserisciOfferta((sconto / 100f), dataInizio, dataFine);
+
+        System.out.println("Offerta inserita: ");
+        System.out.println(this.offertaCorrente.toString());
+
+        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+        Integer conferma = scanner.nextInt();
+        try {
+            switch (conferma) {
+                case 0:
+                    System.out.println("Creazione dell'offerta promozionale annullata.");
+                    return;
+                case 1:
+                    confermaOfferta();
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 1.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+
+        System.out.println("Creazione dell'offerta promozionale effettuata con successo.");
+        pulisciCorrentiESelezionati();
+    }
+
+    public Offerta inserisciOfferta(Float sconto, LocalDate dataInizio, LocalDate dataFine) {
+        Offerta offerta = new Offerta(sconto, dataInizio, dataFine);
+
+        this.offertaCorrente = offerta;
+
+        return offerta;
+    }
+
+    public void confermaOfferta() {
+        this.offerte.put(this.offertaCorrente.getCodice(), this.offertaCorrente);
+    }
+
+    // UC8
+    public void creazioneDiUnaSchedaPersonalizzata(Integer codicePersonalTrainer) {
+        this.personalTrainerSelezionato = personalTrainers.get(codicePersonalTrainer);
+
+        List<String> esercizi = new ArrayList<>();
+
+        Scanner scanner = new Scanner(System.in);
+
+        Integer confermaEsercizio;
+        do {
+            System.out.print("Seleziona 1 per inserire un esercizio in lista, 0 per continuare: ");
+            confermaEsercizio = scanner.nextInt();
+            scanner.nextLine();
+            try {
+                switch (confermaEsercizio) {
+                    case 0:
+                        break;
+                    case 1:
+                        System.out.print("Inserisci la descrizione di un esercizio: ");
+                        String esercizio = scanner.nextLine();
+                        esercizi.add(esercizio);
+                        break;
+                    default:
+                        System.out.println("Inserisci un numero tra 0 e 1.");
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Input non valido. Inserisci un numero.");
+            }
+        } while (confermaEsercizio != 0);
+
+        LocalDate dataFine = null;
+        do {
+            try {
+                System.out.print("Inserisci la data di fine dell’offerta (yyyy-MM-dd): ");
+                String dataFineInput = scanner.nextLine();
+                dataFine = LocalDate.parse(dataFineInput);
+                if (dataFine.isBefore(LocalDate.now()))
+                    dataFine = null;
+            } catch (DateTimeParseException e) {
+                System.out.println("Data non valida. Inserisci una data valida.");
+            }
+        } while (dataFine == null);
+
+        Map<Integer, Cliente> clienti = inserisciSchedaPersonalizzata(esercizi, dataFine);
+
+        System.out.println("Clienti disponibili: ");
+        for (Cliente cliente : clienti.values()) {
+            System.out.println(cliente.toString());
+        }
+
+        System.out.print("Inserisci il codice cliente a cui associare la scheda personalizzata: ");
+        Integer codiceCliente = scanner.nextInt();
+        scanner.nextLine();
+
+        selezionaCliente(codiceCliente);
+
+        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+        Integer conferma = scanner.nextInt();
+        scanner.nextLine();
+        try {
+            switch (conferma) {
+                case 0:
+                    System.out.println("Creazione della scheda personalizzata annullata.");
+                    return;
+                case 1:
+                    confermaSchedaPersonalizzata();
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 1.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+
+        System.out.println("Creazione della scheda personalizzata effettuata con successo.");
+        pulisciCorrentiESelezionati();
+    }
+
+    public Map<Integer, Cliente> inserisciSchedaPersonalizzata(List<String> esercizi, LocalDate dataFine) {
+        SchedaPersonalizzata schedaPersonalizzata = new SchedaPersonalizzata(esercizi, dataFine);
+        this.schedaPersonalizzataCorrente = schedaPersonalizzata;
+
+        return this.clienti;
+    }
+
+    public Cliente selezionaCliente(Integer codiceCliente) {
+        Cliente cliente = clienti.get(codiceCliente);
+        if (cliente == null) {
+            throw new RuntimeException("Non esiste alcun cliente associato al codice inserito.");
+        }
+        this.clienteCorrente = cliente;
+        return cliente;
+    }
+
+    public void confermaSchedaPersonalizzata() {
+        this.clienteCorrente.setSchedaPersonalizzata(this.schedaPersonalizzataCorrente);
+        this.personalTrainerSelezionato.setSchedaPersonalizzata(this.schedaPersonalizzataCorrente);
+    }
+
+    // UC9
+    public void visualizzaPrenotatiDiUnaLezione(Integer codicePersonalTrainer) {
+        this.personalTrainerSelezionato = personalTrainers.get(codicePersonalTrainer);
+
+        List<Lezione> lezioniPT = visualizzaLezioniPT();
+        for (Lezione l : lezioniPT) {
+            System.out.println(l.toString());
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Inserisci il codice della lezione di cui vuoi vedere gli iscritti: ");
+        Integer codiceLezione = scanner.nextInt();
+
+        selezionaLezionePT(codiceLezione);
+
+        List<Cliente> clientiPrenotati = visualizzaPrenotati();
+        if (clientiPrenotati.size() == 0) {
+            System.out.println("Non è presente alcun cliente prenotato a questa lezione.");
+        }
+        for (Cliente c : clientiPrenotati) {
+            System.out.println(c.toString());
+        }
+
+        System.out.println("Visualizzazione effettuata con successo.");
+        pulisciCorrentiESelezionati();
+    }
+
+    public List<Lezione> visualizzaLezioniPT() {
+        return new ArrayList<>(personalTrainerSelezionato.getLezioni().values());
+    }
+
+    public void selezionaLezionePT(Integer codiceLezione) {
+        this.lezioneCorrente = this.personalTrainerSelezionato.getLezioni().get(codiceLezione);
+    }
+
+    public List<Cliente> visualizzaPrenotati() {
+        List<Cliente> clientiPrenotati = new ArrayList<>();
+        for (Cliente c : this.clienti.values()) {
+            Collection<Prenotazione> prenotazioni = c.getPrenotazioni().values();
+            for (Prenotazione p : prenotazioni) {
+                if (p.getLezione().equals(this.lezioneCorrente)) {
+                    clientiPrenotati.add(c);
+                }
+            }
+        }
+        return clientiPrenotati;
     }
 
     // UC10
@@ -948,4 +1207,5 @@ public class Gym4U {
     public void confermaPresenza() {
         this.prenotazioneCorrente.setValidata();
     }
+
 }
