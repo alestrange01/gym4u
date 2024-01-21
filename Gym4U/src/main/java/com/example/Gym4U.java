@@ -885,7 +885,7 @@ public class Gym4U {
         this.abbonamentoCorrente = cliente.modificaAbbonamento(tipologiaAbbonamento);
         Offerta offertaAttiva = verificaOffertaAttiva();
         if (offertaAttiva != null)
-            cliente.getAbbonamento().setOfferta(offertaAttiva);
+            this.abbonamentoCorrente.setOfferta(offertaAttiva);
     }
 
     public void confermaModificaAbbonamento(Cliente cliente) {
@@ -917,15 +917,18 @@ public class Gym4U {
         System.out.print("Inserisci il codice del personal trainer: ");
         String codicePersonalTrainer = scanner.nextLine();
 
-        System.out.print("Inserisci il giorno della lezione (Monday->Sunday): ");
-        String giorno = scanner.nextLine();
+        String giorno = null;
+        LocalTime time = null;
+        do{
+            System.out.print("Inserisci il giorno della lezione (Monday->Sunday): ");
+            giorno = scanner.nextLine();
 
-        System.out.print("Inserisci l'orario della lezione(HH:mm): ");
-        String ora = scanner.nextLine();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime time = LocalTime.parse(ora.trim(), formatter);
-
-        selezionaPersonalTrainer(codicePersonalTrainer, giorno, time, 1f);
+            System.out.print("Inserisci l'orario della lezione(HH:mm): ");
+            String ora = scanner.nextLine();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            time = LocalTime.parse(ora.trim(), formatter);
+        }
+        while(!selezionaPersonalTrainer(codicePersonalTrainer, giorno, time, 1f));
 
         System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
         Integer conferma = scanner.nextInt();
@@ -956,7 +959,7 @@ public class Gym4U {
         return this.personalTrainers;
     }
 
-    public void selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
+    public boolean selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
             Float durataLezione) {
         this.personalTrainerSelezionato = this.personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
 
@@ -966,9 +969,11 @@ public class Gym4U {
 
         Boolean personalTrainerDisponibile = isPersonalTrainerDisponibile(dataLezione, orarioLezione, durataLezione);
         if (!personalTrainerDisponibile) {
-            throw new RuntimeException("Personal Trainer già impegnato durante l'orario selezionato.");
+            System.out.println("Personal Trainer già impegnato durante l'orario selezionato.");
+            return false;
         }
         this.lezioneCorrente = new Lezione(dataLezione, orarioLezione, durataLezione, LezioneEnum.LezionePT);
+        return true;
     }
 
     public boolean isPersonalTrainerDisponibile(LocalDate dataLezione, LocalTime orarioLezione, Float durataLezione) {
