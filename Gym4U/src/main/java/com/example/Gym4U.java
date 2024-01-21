@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -513,7 +514,9 @@ public class Gym4U {
         String descrizione = scanner.nextLine();
 
         System.out.print("Inserisci i giorni (Monday->Sunday) disponibili del corso separati da una virgola: ");
-        List<String> giorniDisponibili = Arrays.asList(scanner.nextLine().split(","));
+        List<String> giorniDisponibili = Arrays.stream(scanner.nextLine().split(","))
+                                        .map(String::trim)
+                                        .collect(Collectors.toList());
 
         System.out.print("Inserisci gli orari (HH:mm) disponibili del corso separati da una virgola: ");
         String[] orariInput = scanner.nextLine().split(",");
@@ -524,11 +527,31 @@ public class Gym4U {
             orariDisponibili.add(time);
         }
 
-        System.out.print("Inserisci la durata delle lezioni del corso: ");
-        float durataLezione = scanner.nextFloat();
-
+        System.out.print("Inserisci la durata delle lezioni del corso (ex 1,5): ");
+        float durataLezione = -1;
+        try {
+            durataLezione = scanner.nextFloat();
+            if (durataLezione <= 0) {
+                System.out.println("Input non valido. Inserisci un numero maggiore di 0.");
+                return false;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+            return false;
+        }
+        
+        Integer postiDisponibili = -1;
         System.out.print("Inserisci il numero di posti disponibili del corso: ");
-        Integer postiDisponibili = scanner.nextInt();
+        try {
+            postiDisponibili = scanner.nextInt();
+            if (postiDisponibili <= 0) {
+                System.out.println("Input non valido. Inserisci un numero maggiore di 0.");
+                return false;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+            return false;
+        }
 
         System.out.print("Associa uno o più Personal Trainer: ");
         List<Integer> codiciPersonalTrainer = Arrays.stream(scanner.next().split(","))
@@ -979,7 +1002,7 @@ public class Gym4U {
     public void creazioneDiUnOffertaPromozionale() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Inserisci la percentuale di sconto: (ex. 10)");
+        System.out.print("Inserisci la percentuale di sconto (ex. 10): ");
         Integer sconto = scanner.nextInt();
 
         LocalDate dataInizio = null;

@@ -8,20 +8,20 @@ public class App {
         Gym4U gym4u = Gym4U.getInstance();
         Boolean continua = true;
         Integer cod = 0;
-        Integer codiceUtente = 0;
+        Integer codiceUtente = -1;
 
         do {
             do {
                 scanner = new Scanner(System.in);
                 do{
-                    codiceUtente = 0;
+                    codiceUtente = -1;
                     System.out.print("Inserisci il tuo codice: ");
                     try {
                         codiceUtente = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println("Input non valido. Inserisci un numero.");
                     }
-                }while(codiceUtente == 0);
+                }while(codiceUtente == -1);
                 System.out.print("Inserisci la tua password: ");
                 String password = scanner.nextLine();
                 try {

@@ -6,7 +6,7 @@ public class Amministratore {
     
     public Amministratore(){
         this.codice = 0;
-        this.password = "000000";
+        this.password = "0";
     }
 
     public Integer getCodice() {
