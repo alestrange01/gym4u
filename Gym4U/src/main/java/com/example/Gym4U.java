@@ -8,6 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
@@ -178,24 +179,33 @@ public class Gym4U {
         cliente.associaMetodoDiPagamento(1234567890, LocalDate.of(2022, 1, 1));
         this.clienti.put(cliente.getCodice(), cliente);
 
+        Cliente cliente2 = new Cliente("Alice", "Bianchi", LocalDate.of(2001, 1, 1), "Via Napoli 1",
+                "alicebianchi@gmail.com", "3394309876");
+        System.out.println("Cliente2: " + cliente2.getCodice());
+        System.out.println("Badge2: " + cliente2.getBadge().getCodice());
+        cliente2.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
+        cliente2.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
+        cliente2.associaMetodoDiPagamento(12345890, LocalDate.of(2022, 1, 1));
+        this.clienti.put(cliente2.getCodice(), cliente2);
+
         PersonalTrainer personalTrainer = new PersonalTrainer();
         System.out.println("Personal Trainer: " + personalTrainer.getCodice());
         this.personalTrainers.put(personalTrainer.getCodice(), personalTrainer);
 
         nuovoCorso("zumba", "Aerobica",
-                Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
-                Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),
+                Arrays.asList("Monday", "Thursday", "Friday"),
+                Arrays.asList(LocalTime.of(10, 30), LocalTime.of(15, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
 
         nuovoCorso("pilates", "Funzionale",
                 Arrays.asList("Tuesday", "Thursday", "Friday"),
-                Arrays.asList(LocalTime.of(12, 30), LocalTime.of(19, 30)),
+                Arrays.asList(LocalTime.of(8, 30), LocalTime.of(19, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
 
         nuovoCorso("crossfit", "Funzionale",
-                Arrays.asList("Monday", "Tuesday", "Thursday"),
+                Arrays.asList( "Tuesday", "Saturday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(18, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
@@ -1115,7 +1125,7 @@ public class Gym4U {
         LocalDate dataFine = null;
         do {
             try {
-                System.out.print("Inserisci la data di fine dell’offerta (yyyy-MM-dd): ");
+                System.out.print("Inserisci la data di fine della scheda (yyyy-MM-dd): ");
                 String dataFineInput = scanner.nextLine();
                 dataFine = LocalDate.parse(dataFineInput);
                 if (dataFine.isBefore(LocalDate.now()))
@@ -1211,7 +1221,10 @@ public class Gym4U {
     }
 
     public List<Lezione> visualizzaLezioniPT() {
-        return new ArrayList<>(this.personalTrainerSelezionato.getLezioni().values());
+        return new ArrayList<>(this.personalTrainerSelezionato.getLezioni().entrySet().stream()
+            .sorted(Map.Entry.comparingByValue(Comparator.comparing(Lezione::getGiorno)))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList()));
     }
 
     public void selezionaLezionePT(Integer codiceLezione) {
@@ -1282,6 +1295,17 @@ public class Gym4U {
         this.prenotazioneCorrente.setValidata();
         this.prenotazioneCorrente = null;
         this.clienteCorrente = null;
+    }
+
+    public void visualizzaSchedaPersonalizzata(Integer codiceCliente) {
+        Cliente cliente = this.clienti.get(codiceCliente);
+        SchedaPersonalizzata schedaPersonalizzata = cliente.getSchedaPersonalizzata();
+        if (schedaPersonalizzata == null) {
+            System.out.println("Non hai ancora alcuna scheda personalizzata.");
+        }
+        else{
+            System.out.println(schedaPersonalizzata.toString());
+        }
     }
 
 }

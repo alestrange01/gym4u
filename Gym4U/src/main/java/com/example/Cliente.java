@@ -25,7 +25,7 @@ public class Cliente {
 
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(0, 100000);
         this.password = "0";
         this.nome = nome;
         this.cognome = cognome;
@@ -93,6 +93,7 @@ public class Cliente {
     public void setBadge(Badge badge) {
         this.badge = badge;
     }
+
 
     public void setSchedaPersonalizzata(SchedaPersonalizzata sp) {
         this.schedaPersonalizzata = sp;

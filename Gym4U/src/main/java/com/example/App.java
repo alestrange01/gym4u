@@ -31,16 +31,17 @@ public class App {
                 }
             } while (cod == 0);
             if (cod == 1) {
-                System.out.println("*********************************");
-                System.out.println("*                               *");
-                System.out.println("*         Menu Cliente          *");
-                System.out.println("* 1. Iscrizione corso           *");
-                System.out.println("* 2. Prenotazione lezione corso *");
-                System.out.println("* 3. Prenotazione lezione PT    *");
-                System.out.println("* 4. Gestione Abbonamento       *");
-                System.out.println("* 0. Esci                       *");
-                System.out.println("*                               *");
-                System.out.println("*********************************");
+                System.out.println("*****************************************");
+                System.out.println("*                                       *");
+                System.out.println("*         Menu Cliente                  *");
+                System.out.println("* 1. Iscrizione corso                   *");
+                System.out.println("* 2. Prenotazione lezione corso         *");
+                System.out.println("* 3. Prenotazione lezione PT            *");    
+                System.out.println("* 4. Gestione Abbonamento               *");
+                System.out.println("* 5  Visualizza Scheda Personalizzata   *");
+                System.out.println("* 0. Esci                               *");
+                System.out.println("*                                       *");
+                System.out.println("*****************************************");
             } else if (cod == 2) {
                 System.out.println("**************************************");
                 System.out.println("*                                    *");
@@ -61,7 +62,7 @@ public class App {
                 System.out.println("*********************************");
             } else if (cod == 4) {
                 System.out.println("*******************************************");
-                System.out.println("*                                       *");
+                System.out.println("*                                         *");
                 System.out.println("*          Menu Personal Trainer          *");
                 System.out.println("* 1. Inserisci scheda personalizzata      *");
                 System.out.println("* 2. Visualizza prenotati ad una lezione  *");
@@ -105,6 +106,10 @@ public class App {
                     case 4:
                         if (cod == 1)
                             gym4u.gestioneAbbonamento(codiceUtente);
+                        break;
+                    case 5:
+                        if (cod == 1)
+                            gym4u.visualizzaSchedaPersonalizzata(codiceUtente);
                         break;
                     case 0:
                         continua = false;

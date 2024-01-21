@@ -6,7 +6,7 @@ public class Badge {
     Integer codice;
 
     public Badge() {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(0, 100000);
     }
 
     public Integer getCodice() {
