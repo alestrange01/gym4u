@@ -35,7 +35,7 @@ public abstract class Abbonamento {
     }
 
     public String toString() {
-        return "Prezzo mensile: " + (this.prezzoMensile - this.scontoMensile) + "\n" +
+        return "Prezzo mensile: " + (this.prezzoMensile - this.scontoMensile - ((this.offertaApplicata != null) ? (this.offertaApplicata.getSconto() * (this.prezzoMensile- this.scontoMensile)) : 0)) + "\n" +
                 "Data scadenza: " + this.dataScadenza + "\n";
     }
 }

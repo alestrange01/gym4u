@@ -21,6 +21,7 @@ public class Gym4U {
     private static Gym4U instance;
     private Map<Integer, PersonalTrainer> personalTrainers;
     private Map<Integer, Cliente> clienti;
+    private Amministratore admin;
     private Corso corsoCorrente;
     private Corso corsoSelezionato;
     private List<Corso> corsiDisponibili;
@@ -37,14 +38,16 @@ public class Gym4U {
     private Map<Integer, Offerta> offerte;
 
     private Gym4U() {
-        this.clienti = new HashMap<Integer, Cliente>();
         this.personalTrainers = new HashMap<Integer, PersonalTrainer>();
+        this.clienti = new HashMap<Integer, Cliente>();
+        this.admin = null;
         this.corsoCorrente = null;
         this.corsoSelezionato = null;
         this.corsiDisponibili = null;
         this.corsi = new HashMap<Integer, Corso>();
-        this.prenotazioni = new HashMap<Integer, Prenotazione>();
         this.prenotazioneCorrente = null;
+        this.prenotazioni = new HashMap<Integer, Prenotazione>();
+        this.lezioneCorrente = null;
         this.clienteCorrente = null;
         this.personalTrainerSelezionato = null;
         this.abbonamentoCorrente = null;
@@ -63,39 +66,63 @@ public class Gym4U {
     }
 
     public Map<Integer, PersonalTrainer> getPersonalTrainers() {
-        return personalTrainers;
+        return this.personalTrainers;
     }
 
     public Map<Integer, Cliente> getClienti() {
-        return clienti;
-    }
-
-    public Cliente getClienteCorrente() {
-        return clienteCorrente;
-    }
-
-    public Abbonamento getAbbonamentoCorrente() {
-        return abbonamentoCorrente;
-    }
-
-    public MetodoDiPagamento getMetodoDiPagamentoCorrente() {
-        return metodoDiPagamentoCorrente;
+        return this.clienti;
     }
 
     public Corso getCorsoCorrente() {
-        return corsoCorrente;
+        return this.corsoCorrente;
     }
 
     public Corso getCorsoSelezionato() {
-        return corsoSelezionato;
+        return this.corsoSelezionato;
+    }
+
+    public Abbonamento getAbbonamentoCorrente() {
+        return this.abbonamentoCorrente;
+    }
+
+    public MetodoDiPagamento getMetodoDiPagamentoCorrente() {
+        return this.metodoDiPagamentoCorrente;
+    }
+
+    public Prenotazione getPrenotazioneCorrente() {
+        return this.prenotazioneCorrente;
     }
 
     public Map<Integer, Prenotazione> getPrenotazioni() {
-        return prenotazioni;
+        return this.prenotazioni;
     }
 
     public Lezione getLezioneCorrente() {
         return this.lezioneCorrente;
+    }
+
+    public Cliente getClienteCorrente() {
+        return this.clienteCorrente;
+    }
+
+    public PersonalTrainer getPersonalTrainerSelezionato() {
+        return this.personalTrainerSelezionato;
+    }
+
+    public SchedaPersonalizzata getSchedaPersonalizzataCorrente() {
+        return this.schedaPersonalizzataCorrente;
+    }
+
+    public Offerta getOffertaCorrente() {
+        return this.offertaCorrente;
+    }
+
+    public Map<Integer, Offerta> getOfferte() {
+        return this.offerte;
+    }
+
+    public void setPersonalTrainers(Map<Integer, PersonalTrainer> personalTrainers) {
+        this.personalTrainers = personalTrainers;
     }
 
     public void setClienti(Map<Integer, Cliente> clienti) {
@@ -110,61 +137,33 @@ public class Gym4U {
         this.corsiDisponibili = corsiDisponibili;
     }
 
-    public void setPersonalTrainerSelezionato(PersonalTrainer personalTrainer) {
-        this.personalTrainerSelezionato = personalTrainer;
-    }
-
-    public PersonalTrainer getPersonalTrainerSelezionato() {
-        return this.personalTrainerSelezionato;
-    }
-
-    public void setPersonalTrainers(Map<Integer, PersonalTrainer> personalTrainers) {
-        this.personalTrainers = personalTrainers;
-    }
-
-    public void setLezioneCorrente(Lezione lezione) {
-        this.lezioneCorrente = lezione;
-    }
-
     public void setCorsi(Map<Integer, Corso> corsi) {
         this.corsi = corsi;
-    }
-
-    public Prenotazione getPrenotazioneCorrente() {
-        return this.prenotazioneCorrente;
     }
 
     public void setPrenotazioneCorrente(Prenotazione prenotazione) {
         this.prenotazioneCorrente = prenotazione;
     }
 
+    public void setLezioneCorrente(Lezione lezione) {
+        this.lezioneCorrente = lezione;
+    }
+
     public void setClienteCorrente(Cliente cliente) {
         this.clienteCorrente = cliente;
     }
 
-    public Offerta getOffertaCorrente() {
-        return this.offertaCorrente;
-    }
-
-    public void setOffertaCorrente(Offerta offerta) {
-        this.offertaCorrente = offerta;
-    }
-
-    public Map<Integer, Offerta> getOfferte() {
-        return this.offerte;
-    }
-
-    public SchedaPersonalizzata getSchedaPersonalizzataCorrente() {
-        return this.schedaPersonalizzataCorrente;
+    public void setPersonalTrainerSelezionato(PersonalTrainer personalTrainer) {
+        this.personalTrainerSelezionato = personalTrainer;
     }
 
     public void setSchedaPersonalizzataCorrente(SchedaPersonalizzata schedaPersonalizzata) {
         this.schedaPersonalizzataCorrente = schedaPersonalizzata;
     }
 
-    // public Map<Integer, Offerta> getOfferte(){
-    // return this.offerte;
-    // }
+    public void setOffertaCorrente(Offerta offerta) {
+        this.offertaCorrente = offerta;
+    }
 
     public void loadData() {
         // Avviamento
@@ -176,11 +175,11 @@ public class Gym4U {
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         cliente.associaMetodoDiPagamento(1234567890, LocalDate.of(2022, 1, 1));
-        clienti.put(cliente.getCodice(), cliente);
+        this.clienti.put(cliente.getCodice(), cliente);
 
         PersonalTrainer personalTrainer = new PersonalTrainer();
         System.out.println("Personal Trainer: " + personalTrainer.getCodice());
-        personalTrainers.put(personalTrainer.getCodice(), personalTrainer);
+        this.personalTrainers.put(personalTrainer.getCodice(), personalTrainer);
 
         nuovoCorso("zumba", "Aerobica",
                 Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
@@ -199,47 +198,48 @@ public class Gym4U {
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(18, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
+        this.admin = new Amministratore();
     }
 
-    private void pulisciCorrentiESelezionati() {
-        this.corsoCorrente = null;
-        this.corsoSelezionato = null;
-        this.corsiDisponibili = null;
-        this.prenotazioneCorrente = null;
-        this.lezioneCorrente = null;
-        this.clienteCorrente = null;
-        this.personalTrainerSelezionato = null;
-        this.abbonamentoCorrente = null;
-        this.metodoDiPagamentoCorrente = null;
-        this.schedaPersonalizzataCorrente = null;
-        this.offertaCorrente = null;
+    public Integer verificaUtente(Integer codice, String password) {
+        if (verificaCliente(codice, password)) {
+            return 1;
+        } else if (verificaAmministratore(codice, password)) {
+            return 2;
+        } else if (verificaIngressoInPalestra(codice)) {
+            return 3;
+        } else if (verificaPersonalTrainer(codice, password)) {
+            return 4;
+        } else {
+            return 0;
+        }
     }
 
-    public boolean verificaCliente(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
-        if (cliente != null) {
+    public boolean verificaCliente(Integer codice, String password) {
+        Cliente cliente = this.clienti.get(codice);
+        if (cliente != null && cliente.verificaPassword(password)) {
             return true;
         }
         return false;
     }
 
-    public boolean verificaAmministratore(Integer codice) {
-        if (codice == 0) {
+    public boolean verificaAmministratore(Integer codice, String password) {
+        if (codice == this.admin.getCodice() && this.admin.verificaPassword(password)) {
             return true;
         }
         return false;
     }
 
-    public boolean isIngressoInPalestra(Integer codice) {
+    public boolean verificaPersonalTrainer(Integer codice, String password) {
+        PersonalTrainer personalTrainer = this.personalTrainers.get(codice);
+        if (personalTrainer != null && personalTrainer.verificaPassword(password)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean verificaIngressoInPalestra(Integer codice) {
         if (codice == 1) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isPersonalTrainer(Integer codice) {
-        PersonalTrainer personalTrainer = personalTrainers.get(codice);
-        if (personalTrainer != null) {
             return true;
         }
         return false;
@@ -288,12 +288,11 @@ public class Gym4U {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
         } while (!number);
-        pulisciCorrentiESelezionati();
         System.out.println("Iscrizione al corso effettuata con successo.");
     }
 
     public List<Corso> visualizzaCorsi(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
+        Cliente cliente = this.clienti.get(codiceCliente);
         if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
             throw new RuntimeException("Certificato medico o/e abbonamento del cliente non valido.");
         }
@@ -303,7 +302,7 @@ public class Gym4U {
 
     public List<Corso> getCorsiDisponibili(Integer codiceCliente) {
         List<Corso> corsiDisponibili = new ArrayList<Corso>();
-        Cliente cliente = clienti.get(codiceCliente);
+        Cliente cliente = this.clienti.get(codiceCliente);
         for (Map.Entry<Integer, Corso> entry : this.corsi.entrySet()) {
             Corso corso = entry.getValue();
             if (corso.getDisponibilità() > 0 && !cliente.getCorsi().containsKey(corso.getCodiceUnivoco()))
@@ -313,7 +312,7 @@ public class Gym4U {
     }
 
     public Corso selezionaCorso(Integer codiceUnivoco) {
-        for (Corso corso : corsiDisponibili) {
+        for (Corso corso : this.corsiDisponibili) {
             if (corso.getCodiceUnivoco().equals(codiceUnivoco)) {
                 this.corsoSelezionato = corso;
                 return corso;
@@ -323,15 +322,16 @@ public class Gym4U {
     }
 
     public void confermaIscrizione(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
-        cliente.setCorso(corsoSelezionato);
-        corsoSelezionato.diminuisciDisponibilità();
-        corsoSelezionato = null;
+        Cliente cliente = this.clienti.get(codiceCliente);
+        cliente.setCorso(this.corsoSelezionato);
+        this.corsoSelezionato.diminuisciDisponibilità();
+        this.corsoSelezionato = null;
+        this.corsiDisponibili = null;
     }
 
     // UC2
     public void prenotazioneLezioneCorso(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
+        Cliente cliente = this.clienti.get(codiceCliente);
         visualizzaCorsiCliente(cliente);
         Scanner scanner = new Scanner(System.in);
 
@@ -412,7 +412,6 @@ public class Gym4U {
         }
 
         System.out.println("Prenotazione alla lezione effettuata con successo.");
-        pulisciCorrentiESelezionati();
     }
 
     public void visualizzaCorsiCliente(Cliente cliente) {
@@ -454,20 +453,24 @@ public class Gym4U {
 
     public void confermaLezione(Prenotazione prenotazione, Cliente cliente, Lezione lezione) {
         prenotazione.setLezione(lezione);
-        prenotazioni.put(prenotazione.getCodice(), prenotazione);
+        this.prenotazioni.put(prenotazione.getCodice(), prenotazione);
         cliente.setPrenotazione(prenotazione);
+        this.corsoSelezionato = null;
+        this.prenotazioneCorrente = null;
+        this.corsiDisponibili = null;
     }
 
     // UC3
     public void creaNuovoCorso() {
-        infoNuovoCorso();
+        if (!infoNuovoCorso())
+            return;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Riepilogo informazioni inserite: ");
-        System.out.println(corsoCorrente.getTotalInfo());
+        System.out.println(this.corsoCorrente.getTotalInfo());
         System.out.println("Personal Trainer selezionati: ");
-        for (Integer codicePersonalTrainer : corsoCorrente.getIdsPersonalTrainer()) {
-            PersonalTrainer personalTrainer = personalTrainers.get(codicePersonalTrainer);
+        for (Integer codicePersonalTrainer : this.corsoCorrente.getIdsPersonalTrainer()) {
+            PersonalTrainer personalTrainer = this.personalTrainers.get(codicePersonalTrainer);
             System.out.println(personalTrainer.toString());
         }
 
@@ -490,10 +493,9 @@ public class Gym4U {
         }
 
         System.out.println("Corso creato con successo.");
-        pulisciCorrentiESelezionati();
     }
 
-    public void infoNuovoCorso() {
+    public boolean infoNuovoCorso() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Inserisci il nome del corso: ");
         String nome = scanner.nextLine();
@@ -523,10 +525,18 @@ public class Gym4U {
         List<Integer> codiciPersonalTrainer = Arrays.stream(scanner.next().split(","))
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
+        for (Integer ptId : codiciPersonalTrainer) {
+            PersonalTrainer pt = this.personalTrainers.get(ptId);
+            if (pt.getCorsi() != null && pt.getCorsi().size() == 5) {
+                System.out.println(
+                        "Impossibile creare il nuovo corso, è presente un personal trainer che insegna già 5 corsi.");
+                return false;
+            }
+        }
 
         nuovoCorso(nome, descrizione, giorniDisponibili, orariDisponibili, durataLezione, postiDisponibili,
                 codiciPersonalTrainer);
-
+        return true;
     }
 
     public void nuovoCorso(String nome, String descrizione, List<String> giorniDisponibili,
@@ -538,16 +548,16 @@ public class Gym4U {
     }
 
     public void confermaNuovoCorso() {
-        associaPersonalTrainer(corsoCorrente.getIdsPersonalTrainer());
-        corsi.put(corsoCorrente.getCodiceUnivoco(), corsoCorrente);
-        corsoCorrente = null;
+        associaPersonalTrainer(this.corsoCorrente.getIdsPersonalTrainer());
+        this.corsi.put(this.corsoCorrente.getCodiceUnivoco(), this.corsoCorrente);
+        this.corsoCorrente = null;
     }
 
     public void associaPersonalTrainer(List<Integer> codiciPersonalTrainer) {
         for (Integer codicePersonalTrainer : codiciPersonalTrainer) {
-            PersonalTrainer personalTrainer = personalTrainers.get(codicePersonalTrainer);
-            personalTrainer.setCorso(corsoCorrente);
-            for (Lezione l : corsoCorrente.getLezioni().values()) {
+            PersonalTrainer personalTrainer = this.personalTrainers.get(codicePersonalTrainer);
+            personalTrainer.setCorso(this.corsoCorrente);
+            for (Lezione l : this.corsoCorrente.getLezioni().values()) {
                 personalTrainer.setLezione(l);
             }
         }
@@ -617,10 +627,10 @@ public class Gym4U {
 
         // riepilogo informazioni inserite
         System.out.println("Riepilogo informazioni inserite: ");
-        System.out.println(clienteCorrente.toString());
-        System.out.println(clienteCorrente.getCertificatoMedico().toString());
-        System.out.println(clienteCorrente.getAbbonamento().toString());
-        System.out.println(clienteCorrente.getMetodoDiPagamento().toString());
+        System.out.println(this.clienteCorrente.toString());
+        System.out.println(this.clienteCorrente.getCertificatoMedico().toString());
+        System.out.println(this.clienteCorrente.getAbbonamento().toString());
+        System.out.println(this.clienteCorrente.getMetodoDiPagamento().toString());
 
         System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
         Integer conferma = scanner.nextInt();
@@ -643,7 +653,6 @@ public class Gym4U {
 
         System.out.println("Registrazione nuovo cliente effettuata con successo.");
         System.out.println("Badge associato al cliente: " + badge.getCodice());
-        pulisciCorrentiESelezionati();
     }
 
     public boolean infoNuovoCliente() {
@@ -667,7 +676,6 @@ public class Gym4U {
         if (LocalDate.now().minusYears(18).isBefore(dataNascita)) {
             System.out.println("Il cliente deve essere maggiorenne.");
             System.out.println("Registrazione nuovo cliente annullata.");
-            // finisce l'esecuzione del programma
             return false;
         }
 
@@ -704,6 +712,20 @@ public class Gym4U {
 
     public void associaAbbonamento(Integer tipologiaAbbonamento) {
         this.clienteCorrente.associaAbbonamento(tipologiaAbbonamento);
+        Offerta offertaAttiva = verificaOffertaAttiva();
+        if (offertaAttiva != null)
+            this.clienteCorrente.getAbbonamento().setOfferta(offertaAttiva);
+    }
+
+    public Offerta verificaOffertaAttiva() {
+        for (Offerta offerta : this.offerte.values()) {
+            if ((LocalDate.now().isAfter(offerta.getDataInizio()) || LocalDate.now().equals(offerta.getDataInizio()))
+                    && (LocalDate.now().isBefore(offerta.getDataFine())
+                            || LocalDate.now().equals(offerta.getDataFine()))) {
+                return offerta;
+            }
+        }
+        return null;
     }
 
     public void associaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta) {
@@ -720,7 +742,7 @@ public class Gym4U {
 
     // UC5
     public void gestioneAbbonamento(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
+        Cliente cliente = this.clienti.get(codiceCliente);
 
         System.out.println("Abbonamento attuale: ");
         System.out.println(cliente.getAbbonamento().toString());
@@ -825,11 +847,13 @@ public class Gym4U {
         } catch (NumberFormatException e) {
             System.out.println("Input non valido. Inserisci un numero.");
         }
-        pulisciCorrentiESelezionati();
     }
 
     public void modificaAbbonamento(Integer tipologiaAbbonamento, Cliente cliente) {
         this.abbonamentoCorrente = cliente.modificaAbbonamento(tipologiaAbbonamento);
+        Offerta offertaAttiva = verificaOffertaAttiva();
+        if (offertaAttiva != null)
+            cliente.getAbbonamento().setOfferta(offertaAttiva);
     }
 
     public void confermaModificaAbbonamento(Cliente cliente) {
@@ -848,7 +872,7 @@ public class Gym4U {
 
     // UC6
     public void prenotazioneLezionePT(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
+        Cliente cliente = this.clienti.get(codiceCliente);
         this.clienteCorrente = cliente;
 
         Map<Integer, PersonalTrainer> personalTrainers = visualizzaPersonalTrainers(cliente);
@@ -890,7 +914,6 @@ public class Gym4U {
         }
 
         System.out.println("Prenotazione alla lezionePT effettuata con successo.");
-        pulisciCorrentiESelezionati();
     }
 
     public Map<Integer, PersonalTrainer> visualizzaPersonalTrainers(Cliente cliente) {
@@ -903,7 +926,7 @@ public class Gym4U {
 
     public void selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
             Float durataLezione) {
-        this.personalTrainerSelezionato = personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
+        this.personalTrainerSelezionato = this.personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
 
         DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
         int giorniDiDifferenza = (giornoDaAggiungere.getValue() - LocalDate.now().getDayOfWeek().getValue() + 7) % 7;
@@ -917,7 +940,6 @@ public class Gym4U {
     }
 
     public boolean isPersonalTrainerDisponibile(LocalDate dataLezione, LocalTime orarioLezione, Float durataLezione) {
-        System.out.println(this.personalTrainerSelezionato);
         Map<Integer, Lezione> lezioniPersonalTrainer = this.personalTrainerSelezionato.getLezioni();
         for (Lezione lezione : lezioniPersonalTrainer.values()) {
             if (lezione.getGiorno().equals(dataLezione)) {
@@ -937,8 +959,11 @@ public class Gym4U {
 
     public void confermaPrenotazione() {
         Prenotazione p = new Prenotazione();
-        confermaLezione(p, clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
-        personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
+        confermaLezione(p, this.clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
+        this.personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
+        this.personalTrainerSelezionato = null;
+        this.lezioneCorrente = null;
+        this.clienteCorrente = null;
     }
 
     // UC7
@@ -970,6 +995,16 @@ public class Gym4U {
             }
         } while (dataInizio == null || dataFine == null);
 
+        for (Offerta offerta : this.offerte.values()) {
+            if ((dataInizio.isAfter(offerta.getDataInizio()) || dataInizio.equals(offerta.getDataInizio())) &&
+                    (dataInizio.isBefore(offerta.getDataFine()) || dataInizio.equals(offerta.getDataFine()))
+                    || (dataFine.isAfter(offerta.getDataInizio()) || dataFine.equals(offerta.getDataInizio())) &&
+                            (dataFine.isBefore(offerta.getDataFine()) || dataFine.equals(offerta.getDataFine()))) {
+                System.out.println("Offerta coincidente con un'offerta già esistente.");
+                return;
+            }
+        }
+
         Offerta offerta = inserisciOfferta((sconto / 100f), dataInizio, dataFine);
 
         System.out.println("Offerta inserita: ");
@@ -994,7 +1029,6 @@ public class Gym4U {
         }
 
         System.out.println("Creazione dell'offerta promozionale effettuata con successo.");
-        pulisciCorrentiESelezionati();
     }
 
     public Offerta inserisciOfferta(Float sconto, LocalDate dataInizio, LocalDate dataFine) {
@@ -1007,11 +1041,12 @@ public class Gym4U {
 
     public void confermaOfferta() {
         this.offerte.put(this.offertaCorrente.getCodice(), this.offertaCorrente);
+        this.offertaCorrente = null;
     }
 
     // UC8
     public void creazioneDiUnaSchedaPersonalizzata(Integer codicePersonalTrainer) {
-        this.personalTrainerSelezionato = personalTrainers.get(codicePersonalTrainer);
+        this.personalTrainerSelezionato = this.personalTrainers.get(codicePersonalTrainer);
 
         List<String> esercizi = new ArrayList<>();
 
@@ -1086,7 +1121,6 @@ public class Gym4U {
         }
 
         System.out.println("Creazione della scheda personalizzata effettuata con successo.");
-        pulisciCorrentiESelezionati();
     }
 
     public Map<Integer, Cliente> inserisciSchedaPersonalizzata(List<String> esercizi, LocalDate dataFine) {
@@ -1097,7 +1131,7 @@ public class Gym4U {
     }
 
     public Cliente selezionaCliente(Integer codiceCliente) {
-        Cliente cliente = clienti.get(codiceCliente);
+        Cliente cliente = this.clienti.get(codiceCliente);
         if (cliente == null) {
             throw new RuntimeException("Non esiste alcun cliente associato al codice inserito.");
         }
@@ -1108,11 +1142,14 @@ public class Gym4U {
     public void confermaSchedaPersonalizzata() {
         this.clienteCorrente.setSchedaPersonalizzata(this.schedaPersonalizzataCorrente);
         this.personalTrainerSelezionato.setSchedaPersonalizzata(this.schedaPersonalizzataCorrente);
+        this.clienteCorrente = null;
+        this.personalTrainerSelezionato = null;
+        this.schedaPersonalizzataCorrente = null;
     }
 
     // UC9
     public void visualizzaPrenotatiDiUnaLezione(Integer codicePersonalTrainer) {
-        this.personalTrainerSelezionato = personalTrainers.get(codicePersonalTrainer);
+        this.personalTrainerSelezionato = this.personalTrainers.get(codicePersonalTrainer);
 
         List<Lezione> lezioniPT = visualizzaLezioniPT();
         for (Lezione l : lezioniPT) {
@@ -1134,11 +1171,10 @@ public class Gym4U {
         }
 
         System.out.println("Visualizzazione effettuata con successo.");
-        pulisciCorrentiESelezionati();
     }
 
     public List<Lezione> visualizzaLezioniPT() {
-        return new ArrayList<>(personalTrainerSelezionato.getLezioni().values());
+        return new ArrayList<>(this.personalTrainerSelezionato.getLezioni().values());
     }
 
     public void selezionaLezionePT(Integer codiceLezione) {
@@ -1155,6 +1191,8 @@ public class Gym4U {
                 }
             }
         }
+        this.personalTrainerSelezionato = null;
+        this.lezioneCorrente = null;
         return clientiPrenotati;
     }
 
@@ -1165,7 +1203,6 @@ public class Gym4U {
         confermaPresenza();
 
         System.out.println("Accesso in palestra acconsentito.");
-        pulisciCorrentiESelezionati();
     }
 
     public Prenotazione accessoInPalestra(Integer codiceBadge) {
@@ -1206,6 +1243,8 @@ public class Gym4U {
 
     public void confermaPresenza() {
         this.prenotazioneCorrente.setValidata();
+        this.prenotazioneCorrente = null;
+        this.clienteCorrente = null;
     }
 
 }

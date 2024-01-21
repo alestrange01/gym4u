@@ -7,12 +7,14 @@ import java.util.Random;
 public class PersonalTrainer {
 
     private Integer codice;
+    private String password;
     private Map<Integer, Corso> corsi;
     private Map<Integer, Lezione> lezioni;
     private Map<Integer, SchedaPersonalizzata> schedePersonalizzate;
 
     public PersonalTrainer() {
         this.codice = new Random().nextInt();
+        this.password = "000000";
         this.corsi = new HashMap<Integer, Corso>();
         this.lezioni = new HashMap<Integer, Lezione>();
         this.schedePersonalizzate = new HashMap<Integer, SchedaPersonalizzata>();
@@ -45,6 +47,13 @@ public class PersonalTrainer {
 
     public void setSchedaPersonalizzata(SchedaPersonalizzata sp) {
         this.schedePersonalizzate.put(sp.getCodice(), sp);
+    }
+
+    public Boolean verificaPassword(String password) {
+        if(this.password.equals(password)){
+            return true;
+        }
+        return false;
     }
 
     public String toString() {

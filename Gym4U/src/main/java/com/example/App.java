@@ -5,28 +5,24 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        boolean continua = true;
-        boolean isCliente = false;
-        boolean isAmmnistratore = false;
-        boolean isIngressoInPalestra = false;
-        boolean isPersonalTrainer = false;
         Gym4U gym4u = Gym4U.getInstance();
-        Integer codice = 0;
+        Boolean continua = true;
+        Integer cod = 0;
+        Integer codiceUtente = 0;
 
         do {
             do {
                 System.out.print("Inserisci il tuo codice: ");
-                codice = Integer.parseInt(scanner.next());
+                codiceUtente = Integer.parseInt(scanner.next());
+                System.out.print("Inserisci la tua password: ");
+                String password = scanner.nextLine();
                 try {
-                    isCliente = gym4u.verificaCliente(codice);
-                    isAmmnistratore = gym4u.verificaAmministratore(codice);
-                    isIngressoInPalestra = gym4u.isIngressoInPalestra(codice);
-                    isPersonalTrainer = gym4u.isPersonalTrainer(codice);
+                    cod = gym4u.verificaUtente(codiceUtente, password);
                 } catch (NumberFormatException e) {
                     System.out.println("Input non valido. Inserisci un numero.");
                 }
-            } while (!isCliente && !isAmmnistratore && !isIngressoInPalestra && !isPersonalTrainer);
-            if (isCliente) {
+            } while (cod == 0);
+            if (cod == 1) {
                 System.out.println("*********************************");
                 System.out.println("*                               *");
                 System.out.println("*         Menu Cliente          *");
@@ -37,7 +33,7 @@ public class App {
                 System.out.println("* 0. Esci                       *");
                 System.out.println("*                               *");
                 System.out.println("*********************************");
-            } else if (isAmmnistratore) {
+            } else if (cod == 2) {
                 System.out.println("**************************************");
                 System.out.println("*                                    *");
                 System.out.println("*        Menu Amministratore         *");
@@ -47,7 +43,7 @@ public class App {
                 System.out.println("* 0. Esci                            *");
                 System.out.println("*                                    *");
                 System.out.println("**************************************");
-            } else if (isIngressoInPalestra) {
+            } else if (cod == 3) {
                 System.out.println("*********************************");
                 System.out.println("*                               *");
                 System.out.println("*         Menu Cliente          *");
@@ -55,7 +51,7 @@ public class App {
                 System.out.println("* 0. Esci                       *");
                 System.out.println("*                               *");
                 System.out.println("*********************************");
-            } else if (isPersonalTrainer) {
+            } else if (cod == 4) {
                 System.out.println("*******************************************");
                 System.out.println("*                                       *");
                 System.out.println("*          Menu Personal Trainer          *");
@@ -73,33 +69,34 @@ public class App {
                 int scelta = Integer.parseInt(input);
                 switch (scelta) {
                     case 1:
-                        if (isCliente)
-                            gym4u.iscrizioneCorso(codice);
-                        else if (isAmmnistratore)
+                        if (cod == 1)
+                            gym4u.iscrizioneCorso(codiceUtente);
+                        else if (cod == 2)
                             gym4u.creaNuovoCorso();
-                        else if (isIngressoInPalestra) {
+                        else if (cod == 3) {
                             System.out.print("Inserisci il tuo codice badge: ");
                             Integer codiceBadge = Integer.parseInt(scanner.next());
                             gym4u.accessoInPalestraTramiteBadge(codiceBadge);
-                        } else if (isPersonalTrainer)
-                            gym4u.creazioneDiUnaSchedaPersonalizzata(codice);
+                        } else if (cod == 4)
+                            gym4u.creazioneDiUnaSchedaPersonalizzata(codiceUtente);
                         break;
                     case 2:
-                        if (isCliente)
-                            gym4u.prenotazioneLezioneCorso(codice);
-                        else if (isAmmnistratore)
+                        if (cod == 1)
+                            gym4u.prenotazioneLezioneCorso(codiceUtente);
+                        else if (cod == 2)
                             gym4u.registrazioneNuovoCliente();
-                        else if (isPersonalTrainer)
-                            gym4u.visualizzaPrenotatiDiUnaLezione(codice);
+                        else if (cod == 4)
+                            gym4u.visualizzaPrenotatiDiUnaLezione(codiceUtente);
                         break;
                     case 3:
-                        if (isCliente)
-                            gym4u.prenotazioneLezionePT(codice);
-                        else if (isAmmnistratore)
+                        if (cod == 1)
+                            gym4u.prenotazioneLezionePT(codiceUtente);
+                        else if (cod == 2)
                             gym4u.creazioneDiUnOffertaPromozionale();
                         break;
                     case 4:
-                        gym4u.gestioneAbbonamento(codice);
+                        if (cod == 1)
+                            gym4u.gestioneAbbonamento(codiceUtente);
                         break;
                     case 0:
                         continua = false;

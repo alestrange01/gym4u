@@ -8,6 +8,7 @@ import java.util.Random;
 public class Cliente {
 
     private Integer codice;
+    private String password;
     private String nome;
     private String cognome;
     private LocalDate dataNascita;
@@ -25,6 +26,7 @@ public class Cliente {
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
         this.codice = new Random().nextInt();
+        this.password = "000000";
         this.nome = nome;
         this.cognome = cognome;
         this.dataNascita = dataNascita;
@@ -57,7 +59,7 @@ public class Cliente {
     }
 
     public Map<Integer, Prenotazione> getPrenotazioni() {
-        return prenotazioni;
+        return this.prenotazioni;
     }
 
     public Badge getBadge() {
@@ -167,6 +169,13 @@ public class Cliente {
     public void creaBadge() {
         Badge badge = new Badge();
         setBadge(badge);
+    }
+
+    public Boolean verificaPassword(String password) {
+        if(this.password.equals(password)){
+            return true;
+        }
+        return false;
     }
 
     public String toString() {

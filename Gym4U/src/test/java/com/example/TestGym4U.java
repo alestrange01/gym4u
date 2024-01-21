@@ -34,6 +34,7 @@ public class TestGym4U {
         gym4u = Gym4U.getInstance();
     }
 
+    // UC1
     @Before
     public void creaCorso() {
         personalTrainer = new PersonalTrainer();
@@ -54,7 +55,7 @@ public class TestGym4U {
 
         gym4u.getClienti().put(cliente.getCodice(), cliente);
 
-        assertTrue(gym4u.verificaCliente(cliente.getCodice()));
+        assertEquals(Integer.valueOf(1), gym4u.verificaUtente(cliente.getCodice(), "000000"));
     }
 
     @Test
@@ -119,6 +120,7 @@ public class TestGym4U {
         assertEquals(Integer.valueOf(9), corso.getDisponibilità());
     }
 
+    // UC2
     @Test
     public void testVisualizzaCorsiCliente() {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
@@ -208,6 +210,7 @@ public class TestGym4U {
         assertEquals(prenotazione, cliente.getPrenotazioni().get(prenotazione.getCodice()));
     }
 
+    // UC3
     @Test
     public void testNuovoCorso() {
         gym4u.nuovoCorso("zumba", "Aerobica",
@@ -234,6 +237,7 @@ public class TestGym4U {
         assertEquals(corso, personalTrainer.getCorsi().get(corso.getCodiceUnivoco()));
     }
 
+    // UC4
     @Test
     public void testNuovoCliente() {
         gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
@@ -259,6 +263,7 @@ public class TestGym4U {
         assertTrue(gym4u.getClienti().get(codiceCliente).getMetodoDiPagamento().verificaMetodoDiPagamento());
     }
 
+    // UC5
     @Test
     public void testModificaAbbonamento() {
         gym4u.nuovoCliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
@@ -327,6 +332,7 @@ public class TestGym4U {
         assertNull(gym4u.getMetodoDiPagamentoCorrente());
     }
 
+    // UC6
     @Test
     public void testVisualizzaPersonalTrainers() {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
@@ -410,6 +416,113 @@ public class TestGym4U {
         assertTrue(gym4u.isBadgeValido(cliente.getBadge().getCodice()));
     }
 
+    // UC7
+    @Test
+    public void testInserisciOfferta() {
+        Offerta offerta = new Offerta(20f, LocalDate.now(), LocalDate.now().plusMonths(1));
+        gym4u.inserisciOfferta(20f, LocalDate.now(), LocalDate.now().plusMonths(1));
+
+        assertEquals(offerta.getSconto(), gym4u.getOffertaCorrente().getSconto());
+        assertEquals(offerta.getDataInizio(), gym4u.getOffertaCorrente().getDataInizio());
+        assertEquals(offerta.getDataFine(), gym4u.getOffertaCorrente().getDataFine());
+    }
+
+    @Test
+    public void testConfermaOfferta() {
+        Offerta offerta = new Offerta(20f, LocalDate.now(), LocalDate.now().plusMonths(1));
+        Map<Integer, Offerta> offerte = new HashMap<>();
+        offerte.put(offerta.getCodice(), offerta);
+        gym4u.setOffertaCorrente(offerta);
+        gym4u.confermaOfferta();
+
+        assertEquals(offerte, gym4u.getOfferte());
+    }
+
+    // UC8
+    @Test
+    public void testInserisciSchedaPersonalizzata() {
+        SchedaPersonalizzata schedaPersonalizzata = new SchedaPersonalizzata(
+                Arrays.asList("Panca piana 4x5", "Squat 2x6"), LocalDate.now().plusMonths(1));
+        gym4u.inserisciSchedaPersonalizzata(Arrays.asList("Panca piana 4x5", "Squat 2x6"),
+                LocalDate.now().plusMonths(1));
+
+        assertEquals(schedaPersonalizzata.getEsercizi(), gym4u.getSchedaPersonalizzataCorrente().getEsercizi());
+        assertEquals(schedaPersonalizzata.getDataInizio(), gym4u.getSchedaPersonalizzataCorrente().getDataInizio());
+        assertEquals(schedaPersonalizzata.getDataFine(), gym4u.getSchedaPersonalizzataCorrente().getDataFine());
+    }
+
+    @Test
+    public void testSelezionaCliente() {
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
+        Map<Integer, Cliente> clienti = new HashMap<>();
+        clienti.put(cliente.getCodice(), cliente);
+        gym4u.setClienti(clienti);
+
+        assertEquals(cliente, gym4u.selezionaCliente(cliente.getCodice()));
+        assertEquals(cliente, gym4u.getClienteCorrente());
+    }
+
+    @Test
+    public void testConfermaSchedaPersonalizzata() {
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
+        gym4u.setClienteCorrente(cliente);
+        SchedaPersonalizzata schedaPersonalizzata = new SchedaPersonalizzata(
+                Arrays.asList("Panca piana 4x5", "Squat 2x6"), LocalDate.now().plusMonths(1));
+        gym4u.setSchedaPersonalizzataCorrente(schedaPersonalizzata);
+        gym4u.setPersonalTrainerSelezionato(personalTrainer);
+        Map<Integer, PersonalTrainer> personalTrainers = new HashMap<>();
+        personalTrainers.put(personalTrainer.getCodice(), personalTrainer);
+        gym4u.setPersonalTrainers(personalTrainers);
+
+        gym4u.confermaSchedaPersonalizzata();
+        assertEquals(schedaPersonalizzata,
+                gym4u.getPersonalTrainers().get(personalTrainer.getCodice()).getSchedePersonalizzate().get(schedaPersonalizzata.getCodice()));
+    }
+
+    // UC9
+    @Test
+    public void testVisualizzaLezioniPT() {
+        gym4u.setPersonalTrainerSelezionato(personalTrainer);
+
+        assertEquals(new ArrayList<>(personalTrainer.getLezioni().values()), gym4u.visualizzaLezioniPT());
+    }
+
+    @Test
+    public void testSelezionaLezionePT() {
+        Lezione lezionePT = new Lezione(LocalDate.now(), LocalTime.now(), 1f, LezioneEnum.LezionePT);
+        personalTrainer.setLezione(lezionePT);
+        gym4u.setPersonalTrainerSelezionato(personalTrainer);
+
+        gym4u.selezionaLezionePT(lezionePT.getCodice());
+
+        assertEquals(lezionePT, gym4u.getLezioneCorrente());
+    }
+
+    @Test
+    public void testvisualizzaPrenotati() {
+        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
+                "3331234567");
+        Lezione lezionePT = new Lezione(LocalDate.now(), LocalTime.now(), 1f, LezioneEnum.LezionePT);
+        gym4u.setLezioneCorrente(lezionePT);
+        Prenotazione p = new Prenotazione();
+        p.setLezione(lezionePT);
+        cliente.setPrenotazione(p);
+
+        Cliente cliente2 = new Cliente("Marco", "Verdi", LocalDate.of(1990, 1, 1), "Via Roma 1", "marcoverdi@gmail.com",
+                "3331234127");
+
+        Map<Integer, Cliente> clienti = new HashMap<>();
+        clienti.put(cliente.getCodice(), cliente);
+        clienti.put(cliente2.getCodice(), cliente2);
+        gym4u.setClienti(clienti);
+
+        assertEquals(Arrays.asList(cliente), gym4u.visualizzaPrenotati());
+        assertNotEquals(Arrays.asList(cliente, cliente2), gym4u.visualizzaPrenotati());
+    }
+
+    // UC10
     @Test
     public void testIsBadgeValido2() {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
@@ -459,108 +572,7 @@ public class TestGym4U {
         gym4u.setPrenotazioneCorrente(p);
 
         gym4u.confermaPresenza();
-        assertTrue(gym4u.getPrenotazioneCorrente().getValidata());
-    }
-
-    @Test
-    public void testInserisciOfferta() {
-        Offerta offerta = new Offerta(20f, LocalDate.now(), LocalDate.now().plusMonths(1));
-        gym4u.inserisciOfferta(20f, LocalDate.now(), LocalDate.now().plusMonths(1));
-
-        assertEquals(offerta.getSconto(), gym4u.getOffertaCorrente().getSconto());
-        assertEquals(offerta.getDataInizio(), gym4u.getOffertaCorrente().getDataInizio());
-        assertEquals(offerta.getDataFine(), gym4u.getOffertaCorrente().getDataFine());
-    }
-
-    @Test
-    public void testConfermaOfferta() {
-        Offerta offerta = new Offerta(20f, LocalDate.now(), LocalDate.now().plusMonths(1));
-        Map<Integer, Offerta> offerte = new HashMap<>();
-        offerte.put(offerta.getCodice(), offerta);
-        gym4u.setOffertaCorrente(offerta);
-        gym4u.confermaOfferta();
-
-        assertEquals(offerte, gym4u.getOfferte());
-    }
-
-    @Test
-    public void testInserisciSchedaPersonalizzata() {
-        SchedaPersonalizzata schedaPersonalizzata = new SchedaPersonalizzata(
-                Arrays.asList("Panca piana 4x5", "Squat 2x6"), LocalDate.now().plusMonths(1));
-        gym4u.inserisciSchedaPersonalizzata(Arrays.asList("Panca piana 4x5", "Squat 2x6"),
-                LocalDate.now().plusMonths(1));
-
-        assertEquals(schedaPersonalizzata.getEsercizi(), gym4u.getSchedaPersonalizzataCorrente().getEsercizi());
-        assertEquals(schedaPersonalizzata.getDataInizio(), gym4u.getSchedaPersonalizzataCorrente().getDataInizio());
-        assertEquals(schedaPersonalizzata.getDataFine(), gym4u.getSchedaPersonalizzataCorrente().getDataFine());
-    }
-
-    @Test
-    public void testSelezionaCliente() {
-        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
-                "3331234567");
-        Map<Integer, Cliente> clienti = new HashMap<>();
-        clienti.put(cliente.getCodice(), cliente);
-        gym4u.setClienti(clienti);
-
-        assertEquals(cliente, gym4u.selezionaCliente(cliente.getCodice()));
-        assertEquals(cliente, gym4u.getClienteCorrente());
-    }
-
-    @Test
-    public void testConfermaSchedaPersonalizzata() {
-        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
-                "3331234567");
-        gym4u.setClienteCorrente(cliente);
-        SchedaPersonalizzata schedaPersonalizzata = new SchedaPersonalizzata(
-                Arrays.asList("Panca piana 4x5", "Squat 2x6"), LocalDate.now().plusMonths(1));
-        gym4u.setSchedaPersonalizzataCorrente(schedaPersonalizzata);
-        gym4u.setPersonalTrainerSelezionato(personalTrainer);
-
-        gym4u.confermaSchedaPersonalizzata();
-        assertEquals(schedaPersonalizzata, gym4u.getClienteCorrente().getSchedaPersonalizzata());
-        assertEquals(schedaPersonalizzata,
-                gym4u.getPersonalTrainerSelezionato().getSchedePersonalizzate().get(schedaPersonalizzata.getCodice()));
-    }
-
-    @Test
-    public void testVisualizzaLezioniPT() {
-        gym4u.setPersonalTrainerSelezionato(personalTrainer);
-
-        assertEquals(new ArrayList<>(personalTrainer.getLezioni().values()), gym4u.visualizzaLezioniPT());
-    }
-
-    @Test
-    public void testSelezionaLezionePT() {
-        Lezione lezionePT = new Lezione(LocalDate.now(), LocalTime.now(), 1f, LezioneEnum.LezionePT);
-        personalTrainer.setLezione(lezionePT);
-        gym4u.setPersonalTrainerSelezionato(personalTrainer);
-
-        gym4u.selezionaLezionePT(lezionePT.getCodice());
-
-        assertEquals(lezionePT, gym4u.getLezioneCorrente());
-    }
-
-    @Test
-    public void testvisualizzaPrenotati() {
-        Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
-                "3331234567");
-        Lezione lezionePT = new Lezione(LocalDate.now(), LocalTime.now(), 1f, LezioneEnum.LezionePT);
-        gym4u.setLezioneCorrente(lezionePT);
-        Prenotazione p = new Prenotazione();
-        p.setLezione(lezionePT);
-        cliente.setPrenotazione(p);
-
-        Cliente cliente2 = new Cliente("Marco", "Verdi", LocalDate.of(1990, 1, 1), "Via Roma 1", "marcoverdi@gmail.com",
-                "3331234127");
-
-        Map<Integer, Cliente> clienti = new HashMap<>();
-        clienti.put(cliente.getCodice(), cliente);
-        clienti.put(cliente2.getCodice(), cliente2);
-        gym4u.setClienti(clienti);
-
-        assertEquals(Arrays.asList(cliente), gym4u.visualizzaPrenotati());
-        assertNotEquals(Arrays.asList(cliente, cliente2), gym4u.visualizzaPrenotati());
+        assertTrue(p.getValidata());
     }
 
 }
