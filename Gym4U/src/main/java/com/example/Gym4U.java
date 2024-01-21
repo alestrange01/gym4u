@@ -275,6 +275,8 @@ public class Gym4U {
             try {
                 switch (codiceCorso) {
                     case 0:
+                        System.out.println("Iscrizione al corso annullata.");
+                        this.corsoSelezionato = null;
                         return;
                     case 1:
                         number = true;
@@ -332,7 +334,8 @@ public class Gym4U {
     // UC2
     public void prenotazioneLezioneCorso(Integer codiceCliente) {
         Cliente cliente = this.clienti.get(codiceCliente);
-        visualizzaCorsiCliente(cliente);
+        if(!visualizzaCorsiCliente(cliente))
+            return;
         Scanner scanner = new Scanner(System.in);
 
         Map<Integer, Lezione> lezioni = null;
@@ -398,7 +401,7 @@ public class Gym4U {
         try {
             switch (conferma) {
                 case 0:
-                    scanner.close();
+                    System.out.println("Prenotazione alla lezione annullata.");
                     return;
                 case 1:
                     confermaLezione(this.prenotazioneCorrente, cliente, lezioneSelezionata);
@@ -414,15 +417,21 @@ public class Gym4U {
         System.out.println("Prenotazione alla lezione effettuata con successo.");
     }
 
-    public void visualizzaCorsiCliente(Cliente cliente) {
+    public boolean visualizzaCorsiCliente(Cliente cliente) {
         if (!cliente.verificaCertificatoMedico() || !cliente.verificaAbbonamento()) {
             throw new RuntimeException("Certificato medico o/e abbonamento del cliente non valido.");
+        }
+        //verifico che il cliente abbia almeno un corso
+        if (cliente.getCorsi().isEmpty()) {
+            System.out.println("Non sei iscritto a nessun corso.");
+            return false;
         }
         System.out.println("Corsi disponibili: ");
         for (Map.Entry<Integer, Corso> entry : cliente.getCorsi().entrySet()) {
             System.out.println(entry.getValue().toString());
         }
         this.corsiDisponibili = new ArrayList<>(cliente.getCorsi().values());
+        return true;
     }
 
     public Map<Integer, Lezione> selezionaCorsoRestituisciLezioni(Integer codiceUnivoco) {

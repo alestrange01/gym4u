@@ -26,7 +26,7 @@ public class Cliente {
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
         this.codice = new Random().nextInt();
-        this.password = "000000";
+        this.password = "0";
         this.nome = nome;
         this.cognome = cognome;
         this.dataNascita = dataNascita;
