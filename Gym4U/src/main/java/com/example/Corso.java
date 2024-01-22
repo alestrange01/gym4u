@@ -23,7 +23,7 @@ public class Corso {
     public Corso(String nome, String descrizione,
             List<String> giorniDisponibili, List<LocalTime> orariDisponibili,
             float durataLezione, Integer postiDisponibili, List<Integer> idsPersonalTrainer) {
-        this.codiceUnivoco = new Random().nextInt();
+        this.codiceUnivoco = new Random().nextInt(100000);
         this.nome = nome;
         this.descrizione = descrizione;
         this.giorniDisponibili = giorniDisponibili;

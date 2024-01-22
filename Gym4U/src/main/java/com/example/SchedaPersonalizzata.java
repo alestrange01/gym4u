@@ -11,7 +11,7 @@ public class SchedaPersonalizzata {
     private LocalDate dataFine;
 
     public SchedaPersonalizzata(List<String> esercizi, LocalDate dataFine){
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.esercizi = esercizi;
         this.dataInizio = LocalDate.now();
         this.dataFine = dataFine;

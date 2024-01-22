@@ -13,7 +13,7 @@ public class PersonalTrainer {
     private Map<Integer, SchedaPersonalizzata> schedePersonalizzate;
 
     public PersonalTrainer() {
-        this.codice = new Random().nextInt(0, 100000);
+        this.codice = new Random().nextInt(100000);
         this.password = "0";
         this.corsi = new HashMap<Integer, Corso>();
         this.lezioni = new HashMap<Integer, Lezione>();

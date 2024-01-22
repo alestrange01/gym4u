@@ -3,9 +3,10 @@ package com.example;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Random;
 
-public class Cliente {
+public class Cliente extends Observable{
 
     private Integer codice;
     private String password;
@@ -25,7 +26,7 @@ public class Cliente {
 
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
-        this.codice = new Random().nextInt(0, 100000);
+        this.codice = new Random().nextInt(100000);
         this.password = "0";
         this.nome = nome;
         this.cognome = cognome;
@@ -40,10 +41,24 @@ public class Cliente {
         this.badge = new Badge();
         this.metodoDiPagamento = null;
         this.schedaPersonalizzata = null;
+        new MailObserver(this);
+        new SMSObserver(this);
     }
 
     public Integer getCodice() {
         return this.codice;
+    }
+
+    public String getNome(){
+        return this.nome;
+    }    
+    
+    public String getCognome(){
+        return this.cognome;
+    }
+
+    public String getEmail(){
+        return this.email;
     }
 
     public Abbonamento getAbbonamento() {
@@ -88,6 +103,8 @@ public class Cliente {
 
     public void setPrenotazione(Prenotazione p) {
         this.prenotazioni.put(p.getCodice(), p);
+        setChanged();
+        notifyObservers(p);
     }
 
     public void setBadge(Badge badge) {

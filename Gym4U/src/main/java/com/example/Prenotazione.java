@@ -9,7 +9,7 @@ public class Prenotazione {
     private Boolean validata;
     
     public Prenotazione(){
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.lezione = null;
         this.validata = false;
     }

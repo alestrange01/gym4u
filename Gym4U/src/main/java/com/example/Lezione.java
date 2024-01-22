@@ -13,7 +13,7 @@ public class Lezione {
     private LezioneEnum tipologiaLezione;
 
     public Lezione(LocalDate giorno, LocalTime orario, Float durata, LezioneEnum tipologiaLezione) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.giorno = giorno;
         this.orario = orario;
         this.durata = durata;

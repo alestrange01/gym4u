@@ -170,7 +170,7 @@ public class Gym4U {
     public void loadData() {
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
-                "mariorossi@gmail.com", "3394309876");
+                "alessandrostrano21@gmail.com", "3394309876");
         System.out.println("Cliente: " + cliente.getCodice());
         System.out.println("Badge: " + cliente.getBadge().getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());

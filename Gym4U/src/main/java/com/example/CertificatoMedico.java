@@ -9,7 +9,7 @@ public class CertificatoMedico {
     private LocalDate dataScadenza;
 
     public CertificatoMedico(LocalDate dataScadenza) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.dataScadenza = dataScadenza;
     }
 

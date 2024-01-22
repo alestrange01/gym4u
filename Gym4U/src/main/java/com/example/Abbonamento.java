@@ -12,7 +12,7 @@ public abstract class Abbonamento {
     private Offerta offertaApplicata;
 
     public Abbonamento(Float scontoMensile, LocalDate dataScadenza) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.prezzoMensile = 30f;
         this.scontoMensile = scontoMensile;
         this.dataScadenza = dataScadenza;
