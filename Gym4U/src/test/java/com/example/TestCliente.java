@@ -15,6 +15,7 @@ public class TestCliente {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
                 "3331234567");
         Prenotazione prenotazione = new Prenotazione();
+        prenotazione.setLezione(new Lezione(LocalDate.now(), LocalTime.now(), 1f, LezioneEnum.LezionePT));
 
         cliente.setPrenotazione(prenotazione);
 

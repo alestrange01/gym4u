@@ -11,6 +11,8 @@ public class PersonalTrainer {
     private Map<Integer, Corso> corsi;
     private Map<Integer, Lezione> lezioni;
     private Map<Integer, SchedaPersonalizzata> schedePersonalizzate;
+    private Lezione lezioneCorrente;
+    private SchedaPersonalizzata schedaPersonalizzataCorrente;
 
     public PersonalTrainer() {
         this.codice = new Random().nextInt(100000);
@@ -18,6 +20,8 @@ public class PersonalTrainer {
         this.corsi = new HashMap<Integer, Corso>();
         this.lezioni = new HashMap<Integer, Lezione>();
         this.schedePersonalizzate = new HashMap<Integer, SchedaPersonalizzata>();
+        this.lezioneCorrente = null;
+        this.schedaPersonalizzataCorrente = null;
     }
 
     public Integer getCodice() {
@@ -32,9 +36,16 @@ public class PersonalTrainer {
         return this.lezioni;
     }
 
-
-    public Map<Integer, SchedaPersonalizzata> getSchedePersonalizzate(){
+    public Map<Integer, SchedaPersonalizzata> getSchedePersonalizzate() {
         return this.schedePersonalizzate;
+    }
+
+    public Lezione getLezioneCorrente() {
+        return this.lezioneCorrente;
+    }
+
+    public SchedaPersonalizzata getSchedaPersonalizzataCorrente() {
+        return this.schedaPersonalizzataCorrente;
     }
 
     public void setCorso(Corso c) {
@@ -49,8 +60,16 @@ public class PersonalTrainer {
         this.schedePersonalizzate.put(sp.getCodice(), sp);
     }
 
+    public void setLezioneCorrente(Lezione lezione) {
+        this.lezioneCorrente = lezione;
+    }
+
+    public void setSchedaPersonalizzataCorrente(SchedaPersonalizzata schedaPersonalizzata) {
+        this.schedaPersonalizzataCorrente = schedaPersonalizzata;
+    }
+
     public Boolean verificaPassword(String password) {
-        if(this.password.equals(password)){
+        if (this.password.equals(password)) {
             return true;
         }
         return false;

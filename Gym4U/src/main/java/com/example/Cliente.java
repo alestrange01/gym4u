@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-public class Cliente extends Observable{
+public class Cliente extends Observable {
 
     private Integer codice;
     private String password;
@@ -23,6 +23,8 @@ public class Cliente extends Observable{
     private Badge badge;
     private MetodoDiPagamento metodoDiPagamento;
     private SchedaPersonalizzata schedaPersonalizzata;
+    private Abbonamento abbonamentoCorrente;
+    private MetodoDiPagamento metodoDiPagamentoCorrente;
 
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
@@ -41,6 +43,8 @@ public class Cliente extends Observable{
         this.badge = new Badge();
         this.metodoDiPagamento = null;
         this.schedaPersonalizzata = null;
+        this.abbonamentoCorrente = null;
+        this.metodoDiPagamentoCorrente = null;
         new MailObserver(this);
         new SMSObserver(this);
     }
@@ -49,15 +53,15 @@ public class Cliente extends Observable{
         return this.codice;
     }
 
-    public String getNome(){
+    public String getNome() {
         return this.nome;
-    }    
-    
-    public String getCognome(){
+    }
+
+    public String getCognome() {
         return this.cognome;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return this.email;
     }
 
@@ -89,6 +93,14 @@ public class Cliente extends Observable{
         return this.schedaPersonalizzata;
     }
 
+    public Abbonamento getAbbonamentoCorrente() {
+        return this.abbonamentoCorrente;
+    }
+
+    public MetodoDiPagamento getMedotoDiPagamentoCorrente() {
+        return this.metodoDiPagamentoCorrente;
+    }
+
     public void setAbbonamento(Abbonamento abbonamento) {
         this.abbonamento = abbonamento;
     }
@@ -111,9 +123,16 @@ public class Cliente extends Observable{
         this.badge = badge;
     }
 
-
     public void setSchedaPersonalizzata(SchedaPersonalizzata sp) {
         this.schedaPersonalizzata = sp;
+    }
+
+    public void setAbbonamentoCorrente(Abbonamento abbonamento) {
+        this.abbonamentoCorrente = abbonamento;
+    }
+
+    public void setMedotoDiPagamentoCorrente(MetodoDiPagamento metodoDiPagamento) {
+        this.metodoDiPagamentoCorrente = metodoDiPagamento;
     }
 
     public void associaAbbonamento(Integer tipologiaAbbonamento) {
@@ -190,7 +209,7 @@ public class Cliente extends Observable{
     }
 
     public Boolean verificaPassword(String password) {
-        if(this.password.equals(password)){
+        if (this.password.equals(password)) {
             return true;
         }
         return false;

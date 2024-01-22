@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 //Singleton GoF
 public class Gym4U {
-    
+
     private static Gym4U instance;
     private Map<Integer, PersonalTrainer> personalTrainers;
     private Map<Integer, Cliente> clienti;
@@ -30,12 +30,8 @@ public class Gym4U {
     private Map<Integer, Corso> corsi;
     private Prenotazione prenotazioneCorrente;
     private Map<Integer, Prenotazione> prenotazioni;
-    private Lezione lezioneCorrente;
     private Cliente clienteCorrente;
     private PersonalTrainer personalTrainerSelezionato;
-    private Abbonamento abbonamentoCorrente;
-    private MetodoDiPagamento metodoDiPagamentoCorrente;
-    private SchedaPersonalizzata schedaPersonalizzataCorrente;
     private Offerta offertaCorrente;
     private Map<Integer, Offerta> offerte;
 
@@ -49,12 +45,8 @@ public class Gym4U {
         this.corsi = new HashMap<Integer, Corso>();
         this.prenotazioneCorrente = null;
         this.prenotazioni = new HashMap<Integer, Prenotazione>();
-        this.lezioneCorrente = null;
         this.clienteCorrente = null;
         this.personalTrainerSelezionato = null;
-        this.abbonamentoCorrente = null;
-        this.metodoDiPagamentoCorrente = null;
-        this.schedaPersonalizzataCorrente = null;
         this.offertaCorrente = null;
         this.offerte = new HashMap<Integer, Offerta>();
         loadData();
@@ -83,14 +75,6 @@ public class Gym4U {
         return this.corsoSelezionato;
     }
 
-    public Abbonamento getAbbonamentoCorrente() {
-        return this.abbonamentoCorrente;
-    }
-
-    public MetodoDiPagamento getMetodoDiPagamentoCorrente() {
-        return this.metodoDiPagamentoCorrente;
-    }
-
     public Prenotazione getPrenotazioneCorrente() {
         return this.prenotazioneCorrente;
     }
@@ -99,20 +83,12 @@ public class Gym4U {
         return this.prenotazioni;
     }
 
-    public Lezione getLezioneCorrente() {
-        return this.lezioneCorrente;
-    }
-
     public Cliente getClienteCorrente() {
         return this.clienteCorrente;
     }
 
     public PersonalTrainer getPersonalTrainerSelezionato() {
         return this.personalTrainerSelezionato;
-    }
-
-    public SchedaPersonalizzata getSchedaPersonalizzataCorrente() {
-        return this.schedaPersonalizzataCorrente;
     }
 
     public Offerta getOffertaCorrente() {
@@ -147,20 +123,12 @@ public class Gym4U {
         this.prenotazioneCorrente = prenotazione;
     }
 
-    public void setLezioneCorrente(Lezione lezione) {
-        this.lezioneCorrente = lezione;
-    }
-
     public void setClienteCorrente(Cliente cliente) {
         this.clienteCorrente = cliente;
     }
 
     public void setPersonalTrainerSelezionato(PersonalTrainer personalTrainer) {
         this.personalTrainerSelezionato = personalTrainer;
-    }
-
-    public void setSchedaPersonalizzataCorrente(SchedaPersonalizzata schedaPersonalizzata) {
-        this.schedaPersonalizzataCorrente = schedaPersonalizzata;
     }
 
     public void setOffertaCorrente(Offerta offerta) {
@@ -204,7 +172,7 @@ public class Gym4U {
         confermaNuovoCorso();
 
         nuovoCorso("crossfit", "Funzionale",
-                Arrays.asList( "Tuesday", "Saturday"),
+                Arrays.asList("Tuesday", "Saturday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(18, 30)),
                 1.5f, 10, new ArrayList<>(getPersonalTrainers().keySet()));
         confermaNuovoCorso();
@@ -344,7 +312,7 @@ public class Gym4U {
     // UC2
     public void prenotazioneLezioneCorso(Integer codiceCliente) {
         Cliente cliente = this.clienti.get(codiceCliente);
-        if(!visualizzaCorsiCliente(cliente))
+        if (!visualizzaCorsiCliente(cliente))
             return;
         Scanner scanner = new Scanner(System.in);
 
@@ -521,13 +489,13 @@ public class Gym4U {
 
         System.out.print("Inserisci i giorni (Monday->Sunday) disponibili del corso separati da una virgola: ");
         List<String> giorniDisponibili = Arrays.stream(scanner.nextLine().split(","))
-                                        .map(String::trim)
-                                        .collect(Collectors.toList());
+                .map(String::trim)
+                .collect(Collectors.toList());
 
         System.out.print("Inserisci gli orari (HH:mm) disponibili del corso separati da una virgola: ");
         String[] orariInput = scanner.nextLine().split(",");
         List<LocalTime> orariDisponibili = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm"); 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         for (String orario : orariInput) {
             LocalTime time = LocalTime.parse(orario.trim(), formatter);
             orariDisponibili.add(time);
@@ -545,7 +513,7 @@ public class Gym4U {
             System.out.println("Input non valido. Inserisci un numero.");
             return false;
         }
-        
+
         Integer postiDisponibili = -1;
         System.out.print("Inserisci il numero di posti disponibili del corso: ");
         try {
@@ -610,7 +578,6 @@ public class Gym4U {
         System.out.println("Riepilogo informazioni inserite: ");
         System.out.print(this.clienteCorrente.toString());
 
-
         LocalDate dataScadenzaCertificatoMedico = null;
         do {
             try {
@@ -628,7 +595,6 @@ public class Gym4U {
         }
         associaCertificatoMedico(dataScadenzaCertificatoMedico);
 
-
         Integer tipologiaAbbonamento = null;
         do {
             System.out.print("Inserire la tipologia di abbonamento:\n" +
@@ -640,7 +606,6 @@ public class Gym4U {
             tipologiaAbbonamento = Integer.parseInt(tipologiaAbbonamentoInput);
         } while (tipologiaAbbonamento != 1 && tipologiaAbbonamento != 2 && tipologiaAbbonamento != 3);
         associaAbbonamento(tipologiaAbbonamento);
-
 
         LocalDate dataScadenzaCarta = null;
         Integer numeroCarta = null;
@@ -811,7 +776,7 @@ public class Gym4U {
                     } while (tipologiaAbbonamento != 1 && tipologiaAbbonamento != 2 && tipologiaAbbonamento != 3);
                     modificaAbbonamento(tipologiaAbbonamento, cliente);
                     System.out.println("Abbonamento selezionato: ");
-                    System.out.println(this.abbonamentoCorrente.toString());
+                    System.out.println(cliente.getAbbonamentoCorrente().toString());
 
                     System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
                     Integer conferma = scanner.nextInt();
@@ -855,7 +820,7 @@ public class Gym4U {
                     } while (dataScadenzaCarta == null);
                     modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta, cliente);
                     System.out.println("Metodo di pagamento inserito: ");
-                    System.out.println(this.metodoDiPagamentoCorrente.toString());
+                    System.out.println(cliente.getMedotoDiPagamentoCorrente().toString());
 
                     System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
                     conferma = scanner.nextInt();
@@ -887,24 +852,24 @@ public class Gym4U {
     }
 
     public void modificaAbbonamento(Integer tipologiaAbbonamento, Cliente cliente) {
-        this.abbonamentoCorrente = cliente.modificaAbbonamento(tipologiaAbbonamento);
+        cliente.setAbbonamentoCorrente(cliente.modificaAbbonamento(tipologiaAbbonamento));
         Offerta offertaAttiva = verificaOffertaAttiva();
         if (offertaAttiva != null)
-            this.abbonamentoCorrente.setOfferta(offertaAttiva);
+            cliente.getAbbonamentoCorrente().setOfferta(offertaAttiva);
     }
 
     public void confermaModificaAbbonamento(Cliente cliente) {
-        cliente.setAbbonamento(this.abbonamentoCorrente);
-        this.abbonamentoCorrente = null;
+        cliente.setAbbonamento(cliente.getAbbonamentoCorrente());
+        cliente.setAbbonamentoCorrente(null);
     }
 
     public void modificaMetodoDiPagamento(Integer numeroCarta, LocalDate dataScadenzaCarta, Cliente cliente) {
-        this.metodoDiPagamentoCorrente = cliente.modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta);
+        cliente.setMedotoDiPagamentoCorrente(cliente.modificaMetodoDiPagamento(numeroCarta, dataScadenzaCarta));
     }
 
     public void confermaModificaMetodoDiPagamento(Cliente cliente) {
-        cliente.setMetodoDiPagamento(this.metodoDiPagamentoCorrente);
-        this.metodoDiPagamentoCorrente = null;
+        cliente.setMetodoDiPagamento(cliente.getMedotoDiPagamentoCorrente());
+        cliente.setMedotoDiPagamentoCorrente(null);
     }
 
     // UC6
@@ -924,7 +889,7 @@ public class Gym4U {
 
         String giorno = null;
         LocalTime time = null;
-        do{
+        do {
             System.out.print("Inserisci il giorno della lezione (Monday->Sunday): ");
             giorno = scanner.nextLine();
 
@@ -932,8 +897,7 @@ public class Gym4U {
             String ora = scanner.nextLine();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             time = LocalTime.parse(ora.trim(), formatter);
-        }
-        while(!selezionaPersonalTrainer(codicePersonalTrainer, giorno, time, 1f));
+        } while (!selezionaPersonalTrainer(codicePersonalTrainer, giorno, time, 1f));
 
         System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
         Integer conferma = scanner.nextInt();
@@ -977,7 +941,8 @@ public class Gym4U {
             System.out.println("Personal Trainer già impegnato durante l'orario selezionato.");
             return false;
         }
-        this.lezioneCorrente = new Lezione(dataLezione, orarioLezione, durataLezione, LezioneEnum.LezionePT);
+        this.personalTrainerSelezionato
+                .setLezioneCorrente(new Lezione(dataLezione, orarioLezione, durataLezione, LezioneEnum.LezionePT));
         return true;
     }
 
@@ -1001,10 +966,12 @@ public class Gym4U {
 
     public void confermaPrenotazione() {
         Prenotazione p = new Prenotazione();
-        confermaLezione(p, this.clienti.get(this.clienteCorrente.getCodice()), this.lezioneCorrente);
-        this.personalTrainers.get(this.personalTrainerSelezionato.getCodice()).setLezione(this.lezioneCorrente);
+        confermaLezione(p, this.clienti.get(this.clienteCorrente.getCodice()),
+                this.personalTrainerSelezionato.getLezioneCorrente());
+        this.personalTrainers.get(this.personalTrainerSelezionato.getCodice())
+                .setLezione(this.personalTrainerSelezionato.getLezioneCorrente());
+        this.personalTrainerSelezionato.setLezioneCorrente(null);
         this.personalTrainerSelezionato = null;
-        this.lezioneCorrente = null;
         this.clienteCorrente = null;
     }
 
@@ -1167,7 +1134,7 @@ public class Gym4U {
 
     public Map<Integer, Cliente> inserisciSchedaPersonalizzata(List<String> esercizi, LocalDate dataFine) {
         SchedaPersonalizzata schedaPersonalizzata = new SchedaPersonalizzata(esercizi, dataFine);
-        this.schedaPersonalizzataCorrente = schedaPersonalizzata;
+        this.personalTrainerSelezionato.setSchedaPersonalizzataCorrente(schedaPersonalizzata);
 
         return this.clienti;
     }
@@ -1182,11 +1149,12 @@ public class Gym4U {
     }
 
     public void confermaSchedaPersonalizzata() {
-        this.clienteCorrente.setSchedaPersonalizzata(this.schedaPersonalizzataCorrente);
-        this.personalTrainerSelezionato.setSchedaPersonalizzata(this.schedaPersonalizzataCorrente);
+        this.clienteCorrente.setSchedaPersonalizzata(this.personalTrainerSelezionato.getSchedaPersonalizzataCorrente());
+        this.personalTrainerSelezionato
+                .setSchedaPersonalizzata(this.personalTrainerSelezionato.getSchedaPersonalizzataCorrente());
         this.clienteCorrente = null;
+        this.personalTrainerSelezionato.setSchedaPersonalizzataCorrente(null);
         this.personalTrainerSelezionato = null;
-        this.schedaPersonalizzataCorrente = null;
     }
 
     // UC9
@@ -1217,13 +1185,14 @@ public class Gym4U {
 
     public List<Lezione> visualizzaLezioniPT() {
         return new ArrayList<>(this.personalTrainerSelezionato.getLezioni().entrySet().stream()
-            .sorted(Map.Entry.comparingByValue(Comparator.comparing(Lezione::getGiorno)))
-            .map(Map.Entry::getValue)
-            .collect(Collectors.toList()));
+                .sorted(Map.Entry.comparingByValue(Comparator.comparing(Lezione::getGiorno)))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList()));
     }
 
     public void selezionaLezionePT(Integer codiceLezione) {
-        this.lezioneCorrente = this.personalTrainerSelezionato.getLezioni().get(codiceLezione);
+        this.personalTrainerSelezionato
+                .setLezioneCorrente(this.personalTrainerSelezionato.getLezioni().get(codiceLezione));
     }
 
     public List<Cliente> visualizzaPrenotati() {
@@ -1231,13 +1200,13 @@ public class Gym4U {
         for (Cliente c : this.clienti.values()) {
             Collection<Prenotazione> prenotazioni = c.getPrenotazioni().values();
             for (Prenotazione p : prenotazioni) {
-                if (p.getLezione().equals(this.lezioneCorrente)) {
+                if (p.getLezione().equals(this.personalTrainerSelezionato.getLezioneCorrente())) {
                     clientiPrenotati.add(c);
                 }
             }
         }
+        this.personalTrainerSelezionato.setLezioneCorrente(null);
         this.personalTrainerSelezionato = null;
-        this.lezioneCorrente = null;
         return clientiPrenotati;
     }
 
@@ -1297,8 +1266,7 @@ public class Gym4U {
         SchedaPersonalizzata schedaPersonalizzata = cliente.getSchedaPersonalizzata();
         if (schedaPersonalizzata == null) {
             System.out.println("Non hai ancora alcuna scheda personalizzata.");
-        }
-        else{
+        } else {
             System.out.println(schedaPersonalizzata.toString());
         }
     }
