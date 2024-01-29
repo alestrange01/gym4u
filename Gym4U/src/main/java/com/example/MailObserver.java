@@ -46,7 +46,8 @@ public class MailObserver implements Observer {
             message.setFrom(new InternetAddress("gym4unict@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(cliente.getEmail()));
             message.setSubject("Nuova prenotazione avvenuta con successo");
-            message.setText("Gentile " + cliente.getNome() + " " + cliente.getCognome()+ ",\n" + "è stata confermata la sua prenotazione per la seguente lezione: \n" + prenotazione.getLezione().toString());
+            message.setText("Gentile " + cliente.getNome() + " " + cliente.getCognome()+ ",\n" + "è stata confermata la sua prenotazione per la seguente lezione: \n" + prenotazione.getLezione().toString() +
+            "\nGrazie per aver utilizzato i nostri servizi.\n\nGym4U\n\nQuesto messaggio è stato generato automaticamente. NON RISPONDERE A QUESTA EMAIL.");
 
             Transport.send(message);
 

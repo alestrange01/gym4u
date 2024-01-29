@@ -412,6 +412,9 @@ public class Gym4U {
 
     public Map<Integer, Lezione> selezionaCorsoRestituisciLezioni(Integer codiceUnivoco) {
         Corso corso = this.corsi.get(codiceUnivoco);
+        if (corso == null) {
+            return null;
+        }
         this.corsoSelezionato = corso;
         corso.loadLezioni();
         return corso.getLezioni();
@@ -422,10 +425,12 @@ public class Gym4U {
     }
 
     public boolean prenotazionePossibile(Lezione lezione, Cliente cliente) {
-        for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
-            if (entry.getValue().getLezione().getGiorno().equals(lezione.getGiorno())) {
-                System.out.println("Hai già prenotato una lezione per questo giorno.");
-                return false;
+        if(lezione != null){
+            for (Map.Entry<Integer, Prenotazione> entry : cliente.getPrenotazioni().entrySet()) {
+                if (entry.getValue().getLezione().getGiorno().equals(lezione.getGiorno())) {
+                    System.out.println("Hai già prenotato una lezione per questo giorno.");
+                    return false;
+                }
             }
         }
         return true;
@@ -884,12 +889,14 @@ public class Gym4U {
         }
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Inserisci il codice del personal trainer: ");
-        String codicePersonalTrainer = scanner.nextLine();
-
+        
+        String codicePersonalTrainer = null;
         String giorno = null;
         LocalTime time = null;
         do {
+            System.out.print("Inserisci il codice del personal trainer: ");
+            codicePersonalTrainer = scanner.nextLine();
+            
             System.out.print("Inserisci il giorno della lezione (Monday->Sunday): ");
             giorno = scanner.nextLine();
 
@@ -931,6 +938,9 @@ public class Gym4U {
     public boolean selezionaPersonalTrainer(String codicePersonalTrainer, String giorno, LocalTime orarioLezione,
             Float durataLezione) {
         this.personalTrainerSelezionato = this.personalTrainers.get(Integer.valueOf(codicePersonalTrainer));
+        if(this.personalTrainerSelezionato == null){
+            return false;
+        }
 
         DayOfWeek giornoDaAggiungere = DayOfWeek.valueOf(giorno.toUpperCase());
         int giorniDiDifferenza = (giornoDaAggiungere.getValue() - LocalDate.now().getDayOfWeek().getValue() + 7) % 7;
