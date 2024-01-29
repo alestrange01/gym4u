@@ -3,11 +3,13 @@ package com.example;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Random;
 
-public class Cliente {
+public class Cliente extends Observable {
 
     private Integer codice;
+    private String password;
     private String nome;
     private String cognome;
     private LocalDate dataNascita;
@@ -21,10 +23,13 @@ public class Cliente {
     private Badge badge;
     private MetodoDiPagamento metodoDiPagamento;
     private SchedaPersonalizzata schedaPersonalizzata;
+    private Abbonamento abbonamentoCorrente;
+    private MetodoDiPagamento metodoDiPagamentoCorrente;
 
     public Cliente(String nome, String cognome, LocalDate dataNascita, String indirizzo, String email,
             String telefono) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
+        this.password = "0";
         this.nome = nome;
         this.cognome = cognome;
         this.dataNascita = dataNascita;
@@ -38,10 +43,26 @@ public class Cliente {
         this.badge = new Badge();
         this.metodoDiPagamento = null;
         this.schedaPersonalizzata = null;
+        this.abbonamentoCorrente = null;
+        this.metodoDiPagamentoCorrente = null;
+        new MailObserver(this);
+        new SMSObserver(this);
     }
 
     public Integer getCodice() {
         return this.codice;
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public String getCognome() {
+        return this.cognome;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     public Abbonamento getAbbonamento() {
@@ -57,7 +78,7 @@ public class Cliente {
     }
 
     public Map<Integer, Prenotazione> getPrenotazioni() {
-        return prenotazioni;
+        return this.prenotazioni;
     }
 
     public Badge getBadge() {
@@ -70,6 +91,14 @@ public class Cliente {
 
     public SchedaPersonalizzata getSchedaPersonalizzata() {
         return this.schedaPersonalizzata;
+    }
+
+    public Abbonamento getAbbonamentoCorrente() {
+        return this.abbonamentoCorrente;
+    }
+
+    public MetodoDiPagamento getMedotoDiPagamentoCorrente() {
+        return this.metodoDiPagamentoCorrente;
     }
 
     public void setAbbonamento(Abbonamento abbonamento) {
@@ -86,6 +115,8 @@ public class Cliente {
 
     public void setPrenotazione(Prenotazione p) {
         this.prenotazioni.put(p.getCodice(), p);
+        setChanged();
+        notifyObservers(p);
     }
 
     public void setBadge(Badge badge) {
@@ -94,6 +125,14 @@ public class Cliente {
 
     public void setSchedaPersonalizzata(SchedaPersonalizzata sp) {
         this.schedaPersonalizzata = sp;
+    }
+
+    public void setAbbonamentoCorrente(Abbonamento abbonamento) {
+        this.abbonamentoCorrente = abbonamento;
+    }
+
+    public void setMedotoDiPagamentoCorrente(MetodoDiPagamento metodoDiPagamento) {
+        this.metodoDiPagamentoCorrente = metodoDiPagamento;
     }
 
     public void associaAbbonamento(Integer tipologiaAbbonamento) {
@@ -167,6 +206,13 @@ public class Cliente {
     public void creaBadge() {
         Badge badge = new Badge();
         setBadge(badge);
+    }
+
+    public Boolean verificaPassword(String password) {
+        if (this.password.equals(password)) {
+            return true;
+        }
+        return false;
     }
 
     public String toString() {

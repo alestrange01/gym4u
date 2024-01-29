@@ -12,7 +12,7 @@ public abstract class Abbonamento {
     private Offerta offertaApplicata;
 
     public Abbonamento(Float scontoMensile, LocalDate dataScadenza) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.prezzoMensile = 30f;
         this.scontoMensile = scontoMensile;
         this.dataScadenza = dataScadenza;
@@ -35,7 +35,8 @@ public abstract class Abbonamento {
     }
 
     public String toString() {
-        return "Prezzo mensile: " + (this.prezzoMensile - this.scontoMensile) + "\n" +
-                "Data scadenza: " + this.dataScadenza + "\n";
+        return "Prezzo mensile: " + (this.prezzoMensile - this.scontoMensile - ((this.offertaApplicata != null) ? (this.offertaApplicata.getSconto() * (this.prezzoMensile- this.scontoMensile)) : 0)) + "\n" +
+                "Data scadenza: " + this.dataScadenza + "\n" +
+                ((this.offertaApplicata != null) ? ("Offerta applicata: " + String.format("%.0f%%\n", this.offertaApplicata.getSconto() * 100)) : "");
     }
 }

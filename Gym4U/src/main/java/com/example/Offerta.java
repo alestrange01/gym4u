@@ -10,7 +10,7 @@ public class Offerta {
     private LocalDate dataFine;
 
     public Offerta(Float sconto, LocalDate dataInizio, LocalDate dataFine) {
-        this.codice = new Random().nextInt();
+        this.codice = new Random().nextInt(100000);
         this.sconto = sconto;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
