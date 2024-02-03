@@ -6,31 +6,41 @@ public class App {
     public static void main(String[] args) {
         Scanner scanner = null;
         Gym4U gym4u = Gym4U.getInstance();
-        Boolean continua = true;
         Integer cod = 0;
         Integer codiceUtente = -1;
 
         do {
             do {
-                scanner = new Scanner(System.in);
-                do{
-                    codiceUtente = -1;
-                    System.out.print("Inserisci il tuo codice: ");
+                if(cod == 0){
+                    scanner = new Scanner(System.in);
+                    do{
+                        codiceUtente = -1;
+                        System.out.print("Inserisci il tuo codice (q per uscire): ");
+                        String input = scanner.nextLine();
+                        if(input.equals("q")){
+                            System.out.println("Arrivederci!");
+                            scanner.close();
+                            System.exit(0);
+                        }
+                        try {
+                            codiceUtente = Integer.parseInt(input);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Input non valido. Inserisci un numero.");
+                        }
+                    }while(codiceUtente == -1);
+                    String password = "";
+                    if (codiceUtente != 1){
+                        System.out.print("Inserisci la tua password: ");
+                        password = scanner.nextLine();
+                    }
                     try {
-                        codiceUtente = Integer.parseInt(scanner.nextLine());
+                        cod = gym4u.verificaUtente(codiceUtente, password);
                     } catch (NumberFormatException e) {
                         System.out.println("Input non valido. Inserisci un numero.");
                     }
-                }while(codiceUtente == -1);
-                String password = "";
-                if (codiceUtente != 1){
-                    System.out.print("Inserisci la tua password: ");
-                    password = scanner.nextLine();
                 }
-                try {
-                    cod = gym4u.verificaUtente(codiceUtente, password);
-                } catch (NumberFormatException e) {
-                    System.out.println("Input non valido. Inserisci un numero.");
+                if (cod == 0) {
+                    System.out.println("Codice o password errati. Riprova.");
                 }
             } while (cod == 0);
             if (cod == 1) {
@@ -103,39 +113,47 @@ public class App {
                             gym4u.registrazioneNuovoCliente();
                         else if (cod == 4)
                             gym4u.visualizzaPrenotatiDiUnaLezione(codiceUtente);
+                        else System.out.println("Opzione non valida. Riprova.");
                         break;
                     case 3:
                         if (cod == 1)
                             gym4u.prenotazioneLezionePT(codiceUtente);
                         else if (cod == 2)
                             gym4u.creazioneDiUnOffertaPromozionale();
+                        else System.out.println("Opzione non valida. Riprova.");
+
                         break;
                     case 4:
                         if (cod == 1)
                             gym4u.gestioneAbbonamento(codiceUtente);
                         else if (cod == 2)
                             gym4u.modificaClienteAdmin();
+                        else System.out.println("Opzione non valida. Riprova.");
                         break;
                     case 5:
                         if (cod == 1)
                             gym4u.visualizzaSchedaPersonalizzata(codiceUtente);
                         else if (cod == 2)
                             gym4u.creaPersonalTrainer();
+                        else System.out.println("Opzione non valida. Riprova.");
                         break;
                     case 6:
                         if (cod == 1)
                             gym4u.visualizzaCorsi();
+                        else System.out.println("Opzione non valida. Riprova.");
                         break;
                     case 7:
                         if (cod == 1)
                             gym4u.modificaAccountPassword(codiceUtente);
+                        else System.out.println("Opzione non valida. Riprova.");
                         break;
                         case 8:
                         if (cod == 1)
                             gym4u.modificaCliente(codiceUtente);
+                        else System.out.println("Opzione non valida. Riprova.");
                         break;
                     case 0:
-                        continua = false;
+                        cod = 0;
                         break;
                     default:
                         System.out.println("Opzione non valida. Riprova.");
@@ -143,10 +161,6 @@ public class App {
             } catch (NumberFormatException e) {
                 System.out.println("Input non valido. Inserisci un numero.");
             }
-
-        } while (continua);
-
-        scanner.close();
+        } while (true);
     }
-
 }

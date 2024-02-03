@@ -1366,9 +1366,14 @@ public class Gym4U {
     }
 
     public void visualizzaCorsi(){
-        System.out.println("Corsi offerti: ");
-        for (Corso c : this.corsi.values()) {
-            System.out.println(c.getTotalInfo());
+        if(this.corsi.size() == 0){
+            System.out.println("Non è presente alcun corso.");
+        }
+        else{
+            System.out.println("Corsi offerti: ");
+            for (Corso c : this.corsi.values()) {
+                System.out.println(c.getTotalInfo());
+            }
         }
     }
 
