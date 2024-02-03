@@ -39,7 +39,7 @@ public class TestGym4U {
     // UC1
     @Before
     public void creaCorso() {
-        personalTrainer = new PersonalTrainer();
+        personalTrainer = new PersonalTrainer("Luca", "Verdi");
         corso = new Corso("zumba", "Aerobica",
                 Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),

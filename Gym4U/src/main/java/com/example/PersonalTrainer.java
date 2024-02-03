@@ -7,6 +7,8 @@ import java.util.Random;
 public class PersonalTrainer {
 
     private Integer codice;
+    private String nome;
+    private String cognome;
     private String password;
     private Map<Integer, Corso> corsi;
     private Map<Integer, Lezione> lezioni;
@@ -14,8 +16,10 @@ public class PersonalTrainer {
     private Lezione lezioneCorrente;
     private SchedaPersonalizzata schedaPersonalizzataCorrente;
 
-    public PersonalTrainer() {
+    public PersonalTrainer(String nome, String cognome) {
         this.codice = new Random().nextInt(100000);
+        this.nome = nome;
+        this.cognome = cognome;
         this.password = "0";
         this.corsi = new HashMap<Integer, Corso>();
         this.lezioni = new HashMap<Integer, Lezione>();
@@ -76,6 +80,6 @@ public class PersonalTrainer {
     }
 
     public String toString() {
-        return "Personal Trainer: " + this.codice;
+        return "Personal Trainer: " + this.nome + " " + this.cognome + " - Codice: " + this.codice;
     }
 }

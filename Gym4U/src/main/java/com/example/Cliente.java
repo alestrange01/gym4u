@@ -1,10 +1,12 @@
 package com.example;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Cliente extends Observable {
 
@@ -53,6 +55,10 @@ public class Cliente extends Observable {
         return this.codice;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public String getNome() {
         return this.nome;
     }
@@ -61,8 +67,20 @@ public class Cliente extends Observable {
         return this.cognome;
     }
 
+    public LocalDate getDataNascita() {
+        return this.dataNascita;
+    }
+
+    public String getIndirizzo() {
+        return this.indirizzo;
+    }
+
     public String getEmail() {
         return this.email;
+    }
+
+    public String getTelefono() {
+        return this.telefono;
     }
 
     public Abbonamento getAbbonamento() {
@@ -99,6 +117,37 @@ public class Cliente extends Observable {
 
     public MetodoDiPagamento getMedotoDiPagamentoCorrente() {
         return this.metodoDiPagamentoCorrente;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+
+    }
+
+    public void setDataNascita(LocalDate dataNascita) {
+        this.dataNascita = dataNascita;
+
+    }
+
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+
     }
 
     public void setAbbonamento(Abbonamento abbonamento) {
@@ -213,6 +262,139 @@ public class Cliente extends Observable {
             return true;
         }
         return false;
+    }
+
+    public void modificaPassword(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Inserisci la vecchia password: ");
+        String oldPassword = scanner.nextLine();
+        if(getPassword().equals(oldPassword)){
+            System.out.print("Inserisci la nuova password: ");
+            String newPassword = scanner.nextLine();
+            setPassword(newPassword);
+            System.out.println("Password modificata con successo.");
+        }
+        else{
+            System.out.println("Password errata.");
+        }
+    }
+
+    public void modificaCliente(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Riepilogo informazioni cliente: ");
+        System.out.println(toString());
+
+        Integer scelta = 0;
+        do{
+            System.out.println("Seleziona il campo da moficare: ");
+            System.out.println("1. Nome");
+            System.out.println("2. Cognome");
+            System.out.println("3. Data di nascita");
+            System.out.println("4. Indirizzo");
+            System.out.println("5. Email");
+            System.out.println("6. Telefono");
+            System.out.println("0. Esci");
+            System.out.print("Inserisci il numero corrispondente: ");
+            scelta = scanner.nextInt();
+            scanner.nextLine();
+
+            Integer conferma = 0;
+            switch (scelta) {
+                case 1:
+                    System.out.println("Nome attuale: " + getNome());
+                    System.out.print("Inserisci il nuovo nome: ");
+                    String nome = scanner.nextLine();
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    scanner.nextLine();
+                    if(conferma == 1){
+                        setNome(nome);
+                    }
+                    break;
+                case 2:
+                    System.out.println("Cognome attuale: " + getCognome());
+                    System.out.print("Inserisci il nuovo cognome: ");
+                    String cognome = scanner.nextLine();
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    scanner.nextLine();
+                    if(conferma == 1){
+                        setCognome(cognome);
+                    }
+                    break;
+                case 3: 
+                    System.out.println("Data di nascita attuale: " + getDataNascita());
+                    LocalDate dataNascita = null;
+                    do {
+                        try {
+                            System.out.print("Inserisci la nuova data di nascita del cliente (yyyy-MM-dd): ");
+                            String dataNascitaInput = scanner.nextLine();
+                            dataNascita = LocalDate.parse(dataNascitaInput);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Data non valida. Inserisci una data valida.");
+                        }
+                    } while (dataNascita == null);
+                    if (LocalDate.now().minusYears(18).isBefore(dataNascita)) {
+                        System.out.println("Il cliente deve essere maggiorenne.");
+                        System.out.println("Modifica cliente annullata.");
+                        return;
+                    }
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    scanner.nextLine();
+                    if(conferma == 1){
+                        setDataNascita(dataNascita);
+                    }
+                    break;
+                case 4:
+                    System.out.println("Indirizzo attuale: " + getIndirizzo());
+                    System.out.print("Inserisci il nuovo indirizzo: ");
+                    String indirizzo = scanner.nextLine();
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    scanner.nextLine();
+                    if(conferma == 1){
+                        setIndirizzo(indirizzo);
+                    }
+                    break;
+                case 5: 
+                    System.out.println("Email attuale: " + getEmail());
+                    System.out.print("Inserisci la nuova email: ");
+                    String email = scanner.nextLine();
+                    while (!email.contains("@")) {
+                        System.out.print("Inserisci un'email valida: ");
+                        email = scanner.nextLine();
+                    }
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    scanner.nextLine();
+                    if(conferma == 1){
+                        setEmail(email);
+                    }
+                    break;
+                case 6:
+                    System.out.println("Numero di telefono attuale: " + getTelefono());
+                    System.out.print("Inserisci il nuovo numero di telefono: ");
+                    String numeroTelefono = scanner.nextLine();
+                    while (numeroTelefono.length() != 10) {
+                        System.out.print("Inserisci un numero di telefono valido: ");
+                        numeroTelefono = scanner.nextLine();
+                    }
+                    System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+                    conferma = scanner.nextInt();
+                    scanner.nextLine();
+                    if(conferma == 1){
+                        setTelefono(numeroTelefono);
+                    }
+                    break;
+                case 0:
+                    System.out.println("Modifica cliente terminata.");
+                    break;
+                default:
+                    break;
+            }
+        }
+        while (scelta != 0);
     }
 
     public String toString() {

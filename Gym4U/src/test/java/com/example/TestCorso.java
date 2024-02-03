@@ -10,7 +10,7 @@ import org.junit.Test;
 public class TestCorso {
     @Test
     public void testDiminuisciDisponibilità() {
-        PersonalTrainer personalTrainer = new PersonalTrainer();
+        PersonalTrainer personalTrainer = new PersonalTrainer("Luca", "Verdi");
         Corso corso = new Corso("zumba", "Aerobica",
                 Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),
