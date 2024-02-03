@@ -138,7 +138,7 @@ public class Gym4U {
     public void loadData() {
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
-                "alessandrostrano21@gmail.com", "3394309876");
+                "mariorossi@gmail.com", "3394309876");
         System.out.println("Cliente: " + cliente.getCodice());
         System.out.println("Badge: " + cliente.getBadge().getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
@@ -155,7 +155,7 @@ public class Gym4U {
         cliente2.associaMetodoDiPagamento(12345890, LocalDate.of(2022, 1, 1));
         this.clienti.put(cliente2.getCodice(), cliente2);
 
-        PersonalTrainer personalTrainer = new PersonalTrainer();
+        PersonalTrainer personalTrainer = new PersonalTrainer("Andrea", "Presti");
         System.out.println("Personal Trainer: " + personalTrainer.getCodice());
         this.personalTrainers.put(personalTrainer.getCodice(), personalTrainer);
 
@@ -1172,25 +1172,30 @@ public class Gym4U {
         this.personalTrainerSelezionato = this.personalTrainers.get(codicePersonalTrainer);
 
         List<Lezione> lezioniPT = visualizzaLezioniPT();
-        for (Lezione l : lezioniPT) {
-            System.out.println(l.toString());
+        if (lezioniPT.size() == 0) {
+            System.out.println("Non è presente alcuna lezione associata a questo personal trainer.");
+        }else{
+            for (Lezione l : lezioniPT) {
+                System.out.println(l.toString());
+            }
+    
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Inserisci il codice della lezione di cui vuoi vedere gli iscritti: ");
+            Integer codiceLezione = scanner.nextInt();
+    
+            selezionaLezionePT(codiceLezione);
+    
+            List<Cliente> clientiPrenotati = visualizzaPrenotati();
+            if (clientiPrenotati.size() == 0) {
+                System.out.println("Non è presente alcun cliente prenotato a questa lezione.");
+            }
+            for (Cliente c : clientiPrenotati) {
+                System.out.println(c.toString());
+            }
+    
+            System.out.println("Visualizzazione effettuata con successo.");
         }
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Inserisci il codice della lezione di cui vuoi vedere gli iscritti: ");
-        Integer codiceLezione = scanner.nextInt();
-
-        selezionaLezionePT(codiceLezione);
-
-        List<Cliente> clientiPrenotati = visualizzaPrenotati();
-        if (clientiPrenotati.size() == 0) {
-            System.out.println("Non è presente alcun cliente prenotato a questa lezione.");
-        }
-        for (Cliente c : clientiPrenotati) {
-            System.out.println(c.toString());
-        }
-
-        System.out.println("Visualizzazione effettuata con successo.");
+        
     }
 
     public List<Lezione> visualizzaLezioniPT() {
@@ -1278,6 +1283,92 @@ public class Gym4U {
             System.out.println("Non hai ancora alcuna scheda personalizzata.");
         } else {
             System.out.println(schedaPersonalizzata.toString());
+        }
+    }
+
+
+    public void modificaClienteAdmin(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Clienti disponibili: ");
+        for (Cliente cliente : clienti.values()) {
+            System.out.println(cliente.toString());
+        }
+        System.out.print("Inserisci il codice cliente da modificare: ");
+        Integer codiceCliente = scanner.nextInt();
+        scanner.nextLine();
+
+        modificaCliente(codiceCliente);
+    }
+
+    public void modificaAccountPassword(Integer codiceCliente){
+        System.out.print("Inserisci il numero dell'opzione desiderata:\n" +
+                "1. Modifica Dati Account\n" +
+                "2. Modifica Password\n" +
+                "0. Esci\n" +
+                "Inserisci il numero corrispondente: ");
+        Scanner scanner = new Scanner(System.in);
+        Integer scelta = Integer.parseInt(scanner.nextLine());
+        try {
+            switch (scelta) {
+                case 0:
+                    System.out.println("Modifica account annullata.");
+                    return;
+                case 1:
+                    modificaCliente(codiceCliente);
+                    break;
+                case 2:
+                    modificaPassword(codiceCliente);
+                    break;
+                default:
+                    System.out.println("Inserisci un numero tra 0 e 2.");
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido. Inserisci un numero.");
+        }
+    }
+
+    public void modificaCliente(Integer codiceCliente){
+        Cliente cliente = selezionaCliente(codiceCliente);
+        cliente.modificaCliente();
+        this.clienteCorrente = null;
+    }
+
+    public void modificaPassword(Integer codiceCliente){
+        Cliente cliente = this.clienti.get(codiceCliente);
+        cliente.modificaPassword();
+    }
+
+    public void creaPersonalTrainer(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Inserisci il nome del personal trainer: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Inserisci il cognome del personal trainer: ");
+        String cognome = scanner.nextLine();
+
+        PersonalTrainer pt = new PersonalTrainer(nome, cognome);
+        this.personalTrainerSelezionato = pt;
+
+        System.out.println("Personal trainer inserito: ");
+        System.out.println(this.personalTrainerSelezionato.toString());
+        Integer conferma = 0;
+        System.out.print("Seleziona 1 per confermare, 0 per annullare: ");
+        conferma = scanner.nextInt();
+        scanner.nextLine();
+        if(conferma == 1){
+            this.personalTrainers.put(this.personalTrainerSelezionato.getCodice(), this.personalTrainerSelezionato);
+            System.out.println("Personal trainer inserito con successo.");
+        }
+        else{
+            System.out.println("Creazione personal trainer annullata.");
+        }
+    }
+
+    public void visualizzaCorsi(){
+        System.out.println("Corsi offerti: ");
+        for (Corso c : this.corsi.values()) {
+            System.out.println(c.getTotalInfo());
         }
     }
 

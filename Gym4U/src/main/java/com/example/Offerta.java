@@ -33,7 +33,7 @@ public class Offerta {
     }
 
     public String toString() {
-        return "Sconto " + (this.sconto) + "\n" +
+        return "Sconto " + String.format("%.0f%%\n", this.sconto * 100) +
                 "Data inizio: " + this.dataInizio + "\n" +
                 "Data scadenza: " + this.dataFine + "\n";
     }

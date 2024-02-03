@@ -26,7 +26,7 @@ public class TestCliente {
     public void testSetCorso() {
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1", "mariorossi@gmail.com",
         "3331234567");
-        PersonalTrainer personalTrainer = new PersonalTrainer();
+        PersonalTrainer personalTrainer = new PersonalTrainer("Luca", "Verdi");
         Corso corso = new Corso("zumba", "Aerobica",
                 Arrays.asList("Monday", "Tuesday", "Thursday", "Friday"),
                 Arrays.asList(LocalTime.of(10, 30), LocalTime.of(12, 30)),

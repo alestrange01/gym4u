@@ -40,7 +40,7 @@ public class Lezione {
         return "Codice: " + this.codice + "\n" +
                 "Giorno: " + this.giorno + " (" + this.giorno.getDayOfWeek() + ")\n" +
                 "Orario: " + this.orario + "\n" +
-                "Durata: " + this.durata + "\n" +
+                "Durata: " + this.durata + "h\n" +
                 "Tipologia: " + this.tipologiaLezione + "\n";
 
     }

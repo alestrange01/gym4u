@@ -22,8 +22,11 @@ public class App {
                         System.out.println("Input non valido. Inserisci un numero.");
                     }
                 }while(codiceUtente == -1);
-                System.out.print("Inserisci la tua password: ");
-                String password = scanner.nextLine();
+                String password = "";
+                if (codiceUtente != 1){
+                    System.out.print("Inserisci la tua password: ");
+                    password = scanner.nextLine();
+                }
                 try {
                     cod = gym4u.verificaUtente(codiceUtente, password);
                 } catch (NumberFormatException e) {
@@ -34,11 +37,13 @@ public class App {
                 System.out.println("*****************************************");
                 System.out.println("*                                       *");
                 System.out.println("*         Menu Cliente                  *");
-                System.out.println("* 1. Iscrizione corso                   *");
-                System.out.println("* 2. Prenotazione lezione corso         *");
-                System.out.println("* 3. Prenotazione lezione PT            *");    
+                System.out.println("* 1. Iscrizione Corso                   *");
+                System.out.println("* 2. Prenotazione Lezione Corso         *");
+                System.out.println("* 3. Prenotazione Lezione PT            *");    
                 System.out.println("* 4. Gestione Abbonamento               *");
                 System.out.println("* 5  Visualizza Scheda Personalizzata   *");
+                System.out.println("* 6. Visualizza Corsi Palestra          *");
+                System.out.println("* 7. Modifica Account e Password        *");
                 System.out.println("* 0. Esci                               *");
                 System.out.println("*                                       *");
                 System.out.println("*****************************************");
@@ -46,9 +51,11 @@ public class App {
                 System.out.println("**************************************");
                 System.out.println("*                                    *");
                 System.out.println("*        Menu Amministratore         *");
-                System.out.println("* 1. Crea nuovo corso                *");
-                System.out.println("* 2. Registrazione nuovo cliente     *");
-                System.out.println("* 3. Inserisci offerta promozionale  *");
+                System.out.println("* 1. Crea nuovo Corso                *");
+                System.out.println("* 2. Registrazione nuovo Cliente     *");
+                System.out.println("* 3. Inserisci Offerta Promozionale  *");
+                System.out.println("* 4. Modifica Cliente                *");
+                System.out.println("* 5. Aggiungi nuovo Personal Trainer *");
                 System.out.println("* 0. Esci                            *");
                 System.out.println("*                                    *");
                 System.out.println("**************************************");
@@ -64,8 +71,8 @@ public class App {
                 System.out.println("*******************************************");
                 System.out.println("*                                         *");
                 System.out.println("*          Menu Personal Trainer          *");
-                System.out.println("* 1. Inserisci scheda personalizzata      *");
-                System.out.println("* 2. Visualizza prenotati ad una lezione  *");
+                System.out.println("* 1. Inserisci Scheda Personalizzata      *");
+                System.out.println("* 2. Visualizza prenotati ad una Lezione  *");
                 System.out.println("* 0. Esci                                 *");
                 System.out.println("*                                         *");
                 System.out.println("*******************************************");
@@ -106,10 +113,26 @@ public class App {
                     case 4:
                         if (cod == 1)
                             gym4u.gestioneAbbonamento(codiceUtente);
+                        else if (cod == 2)
+                            gym4u.modificaClienteAdmin();
                         break;
                     case 5:
                         if (cod == 1)
                             gym4u.visualizzaSchedaPersonalizzata(codiceUtente);
+                        else if (cod == 2)
+                            gym4u.creaPersonalTrainer();
+                        break;
+                    case 6:
+                        if (cod == 1)
+                            gym4u.visualizzaCorsi();
+                        break;
+                    case 7:
+                        if (cod == 1)
+                            gym4u.modificaAccountPassword(codiceUtente);
+                        break;
+                        case 8:
+                        if (cod == 1)
+                            gym4u.modificaCliente(codiceUtente);
                         break;
                     case 0:
                         continua = false;
