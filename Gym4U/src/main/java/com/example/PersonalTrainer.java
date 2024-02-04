@@ -32,6 +32,14 @@ public class PersonalTrainer {
         return this.codice;
     }
 
+    public String getNome() {
+        return this.nome;
+    }
+
+    public String getCognome() {
+        return this.cognome;
+    }
+
     public Map<Integer, Corso> getCorsi() {
         return this.corsi;
     }

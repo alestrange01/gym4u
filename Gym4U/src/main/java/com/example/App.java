@@ -44,6 +44,9 @@ public class App {
                 }
             } while (cod == 0);
             if (cod == 1) {
+                Cliente cliente = gym4u.getClienti().get(codiceUtente);
+                System.out.println("Salve " + cliente.getNome() + " " + cliente.getCognome() + "!");
+                System.out.println(cliente.getBadge());
                 System.out.println("*****************************************");
                 System.out.println("*                                       *");
                 System.out.println("*         Menu Cliente                  *");
@@ -78,6 +81,8 @@ public class App {
                 System.out.println("*                               *");
                 System.out.println("*********************************");
             } else if (cod == 4) {
+                PersonalTrainer pt = gym4u.getPersonalTrainers().get(codiceUtente);
+                System.out.println("Salve " + pt.getNome() + " " + pt.getCognome() + "!");
                 System.out.println("*******************************************");
                 System.out.println("*                                         *");
                 System.out.println("*          Menu Personal Trainer          *");

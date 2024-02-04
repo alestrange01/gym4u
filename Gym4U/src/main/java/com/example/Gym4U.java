@@ -139,8 +139,7 @@ public class Gym4U {
         AbbonamentoAnnualeFactory abbonamentoAnnualeFactory = new AbbonamentoAnnualeFactory();
         Cliente cliente = new Cliente("Mario", "Rossi", LocalDate.of(1990, 1, 1), "Via Roma 1",
                 "mariorossi@gmail.com", "3394309876");
-        System.out.println("Cliente: " + cliente.getCodice());
-        System.out.println("Badge: " + cliente.getBadge().getCodice());
+        System.out.println("Cliente1: " + cliente.getCodice() + " - " + "Badge1: " + cliente.getBadge().getCodice());
         cliente.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         cliente.associaMetodoDiPagamento(1234567890, LocalDate.of(2022, 1, 1));
@@ -148,8 +147,7 @@ public class Gym4U {
 
         Cliente cliente2 = new Cliente("Alice", "Bianchi", LocalDate.of(2001, 1, 1), "Via Napoli 1",
                 "alicebianchi@gmail.com", "3394309876");
-        System.out.println("Cliente2: " + cliente2.getCodice());
-        System.out.println("Badge2: " + cliente2.getBadge().getCodice());
+        System.out.println("Cliente2: " + cliente2.getCodice() + " - " + "Badge2: " + cliente2.getBadge().getCodice());
         cliente2.setAbbonamento(abbonamentoAnnualeFactory.creaAbbonamento());
         cliente2.setCertificatoMedico(new CertificatoMedico(LocalDate.now().plusDays(365)));
         cliente2.associaMetodoDiPagamento(12345890, LocalDate.of(2022, 1, 1));
